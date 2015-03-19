@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.location.paas.cloudfoundry;
+package brooklyn.location.cloudfoundry;
 
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
@@ -36,7 +36,7 @@ public class CloudFoundryPaasLocationResolver extends AbstractPaasLocationResolv
 
     public static final Logger log = LoggerFactory.getLogger(CloudFoundryPaasLocationResolver.class);
 
-    public static final String ClOUD_FOUNDRY = "cloud-foundry";
+    public static final String ClOUD_FOUNDRY = "cloudfoundry";
     public static ConfigKey<String> ADDRESS = ConfigKeys.newStringConfigKey("address");
     public static final String PIVOTAL_HOSTNAME = "run.pivotal.io";
 
@@ -63,9 +63,9 @@ public class CloudFoundryPaasLocationResolver extends AbstractPaasLocationResolv
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Location newLocationFromString(Map locationFlags, String spec, LocationRegistry registry) {
         // TODO: TODO
-        locationFlags.put(ADDRESS.getName(), PIVOTAL_HOSTNAME);
         return managementContext.getLocationManager().createLocation(
                 LocationSpec.create(locationFlags, CloudFoundryPaasLocation.class));
     }

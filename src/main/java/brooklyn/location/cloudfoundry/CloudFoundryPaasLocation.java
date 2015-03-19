@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.location.paas.cloudfoundry;
+package brooklyn.location.cloudfoundry;
 
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
@@ -59,14 +59,16 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
     @Override
     public void init() {
         super.init();
-        //init client
-        initClient();
     }
 
-    private void initClient() {
-        CloudCredentials credentials = new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
-        client = new CloudFoundryClient(credentials, getTargetURL(getConfig(CF_ENDPOINT)), getConfig(CF_ORG), getConfig(CF_SPACE), true);
-        client.login();
+    @Override
+    public void setUpClient() {
+        if (client == null) {
+            CloudCredentials credentials = new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
+            client = new CloudFoundryClient(credentials, getTargetURL(getConfig(CF_ENDPOINT)), getConfig(CF_ORG), getConfig(CF_SPACE), true);
+            client.login();
+        }
+
     }
 
     private static URL getTargetURL(String target) {
@@ -99,12 +101,12 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
     @Nullable
     @Override
     public String getHostname() {
-        return null;
+        return address.getHostName();
     }
 
     @Override
     public Set<String> getPublicAddresses() {
-        return null;
+        return ImmutableSet.of(address.getHostAddress());
     }
 
     @Override
