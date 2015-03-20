@@ -18,6 +18,7 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
+import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.testng.annotations.Test;
 
@@ -35,7 +36,7 @@ public class CloudFoundryPaasLocationLiveTest extends AbstractCloudFoundryPaasLo
     }
 
     @Test
-    public void testAClientSetUpPerLocationInstanve() {
+    public void testClientSetUpPerLocationInstanve() {
         cloudFoundryPaasLocation.setUpClient();
         CloudFoundryClient client1 = cloudFoundryPaasLocation.getCloudFoundryClient();
         cloudFoundryPaasLocation.setUpClient();

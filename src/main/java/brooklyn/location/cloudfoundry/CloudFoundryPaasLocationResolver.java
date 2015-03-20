@@ -24,6 +24,7 @@ import brooklyn.location.Location;
 import brooklyn.location.LocationRegistry;
 import brooklyn.location.LocationSpec;
 import brooklyn.location.basic.BasicLocationRegistry;
+import brooklyn.location.paas.AbstractPaasLocationResolver;
 import brooklyn.management.ManagementContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,6 @@ public class CloudFoundryPaasLocationResolver extends AbstractPaasLocationResolv
     public static final Logger log = LoggerFactory.getLogger(CloudFoundryPaasLocationResolver.class);
 
     public static final String ClOUD_FOUNDRY = "cloudfoundry";
-    public static ConfigKey<String> ADDRESS = ConfigKeys.newStringConfigKey("address");
-    public static final String PIVOTAL_HOSTNAME = "run.pivotal.io";
 
     private ManagementContext managementContext;
 

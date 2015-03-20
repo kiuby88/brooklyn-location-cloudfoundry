@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.location.cloudfoundry;
+package brooklyn.location.entity.cloudfoundry.java;
 
-import brooklyn.location.LocationResolver;
+import brooklyn.location.entity.cloudfoundry.PaasWebAppDriver;
 
-public abstract class AbstractPaasLocationResolver implements LocationResolver {
+public interface JavaPaasWebAppDriver extends PaasWebAppDriver {
 
 }

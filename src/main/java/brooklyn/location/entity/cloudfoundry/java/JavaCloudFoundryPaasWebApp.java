@@ -16,12 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.location.cloudfoundry;
+package brooklyn.location.entity.cloudfoundry.java;
 
-import brooklyn.location.MachineLocation;
+import brooklyn.entity.Entity;
+import brooklyn.entity.proxying.ImplementedBy;
+import brooklyn.entity.trait.Startable;
+import brooklyn.location.entity.cloudfoundry.CloudFoundryWebApp;
+import brooklyn.location.entity.cloudfoundry.PaasHardwareResources;
 
-public interface PaasLocation extends MachineLocation {
-
-    public void setUpClient();
-
+/**
+ * Java webapp entity for being deployed in a CloudFoundry location.
+ */
+@ImplementedBy(JavaCloudFoundryPaasWebAppImpl.class)
+public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp, Entity, Startable, PaasHardwareResources {
+    
 }

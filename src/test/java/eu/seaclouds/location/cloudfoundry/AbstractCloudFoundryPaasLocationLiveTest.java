@@ -20,10 +20,12 @@ package eu.seaclouds.location.cloudfoundry;
 
 import brooklyn.config.BrooklynProperties;
 import brooklyn.entity.BrooklynAppLiveTestSupport;
+import brooklyn.entity.basic.ApplicationBuilder;
 import brooklyn.entity.basic.Entities;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import brooklyn.management.internal.LocalManagementContext;
 import brooklyn.test.entity.LocalManagementContextForTests;
+import brooklyn.test.entity.TestApplication;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -40,6 +42,8 @@ public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynA
         managementContext = newLocalManagementContext();
         brooklynProperties = new LocalManagementContext().getBrooklynProperties();
         cloudFoundryPaasLocation = newSampleCloudFoundryLocationForTesting(LOCATION_SPEC_NAME);
+        app = TestApplication.Factory.newManagedInstanceForTests();
+
     }
 
     protected LocalManagementContext newLocalManagementContext() {

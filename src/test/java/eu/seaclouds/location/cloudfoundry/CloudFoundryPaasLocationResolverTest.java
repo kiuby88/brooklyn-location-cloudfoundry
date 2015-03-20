@@ -79,7 +79,7 @@ public class CloudFoundryPaasLocationResolverTest {
     }
 
     @Test
-    void cloudFoundryClientNtInitilizedTest() {
+    void cloudFoundryClientInitilizedTest() {
         CloudFoundryPaasLocation cloudFoundryPaasLocation = resolve("cloudfoundry-instance");
         assertNull(cloudFoundryPaasLocation.getCloudFoundryClient());
     }
