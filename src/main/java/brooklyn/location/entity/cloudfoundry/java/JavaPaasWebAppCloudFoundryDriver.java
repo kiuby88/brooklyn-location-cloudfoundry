@@ -40,7 +40,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class JavaPaasWebAppCloudFoundryDriver implements JavaPaasWebAppDriver {
 
-
     public static final Logger log = LoggerFactory.getLogger(JavaPaasWebAppCloudFoundryDriver.class);
     //Both of them could be a config KEY!!!!!!!!!!
     private static final int DEFAULT_MEMORY = 512; // MB

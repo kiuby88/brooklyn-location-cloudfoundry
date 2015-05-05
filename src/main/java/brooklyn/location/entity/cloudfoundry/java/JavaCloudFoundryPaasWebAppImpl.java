@@ -57,7 +57,6 @@ import java.util.concurrent.TimeUnit;
 public class JavaCloudFoundryPaasWebAppImpl extends AbstractEntity
         implements JavaCloudFoundryPaasWebApp, DriverDependentEntity {
 
-
     private static final Logger log = LoggerFactory.getLogger(JavaCloudFoundryPaasWebAppImpl.class);
 
     private transient JavaPaasWebAppDriver driver;
@@ -280,7 +279,6 @@ public class JavaCloudFoundryPaasWebAppImpl extends AbstractEntity
 
     }
 
-
     /**
      * Called after driver.start(). Default implementation is to wait to confirm the driver
      * definitely started application deployment.
@@ -466,12 +464,10 @@ public class JavaCloudFoundryPaasWebAppImpl extends AbstractEntity
 
     }
 
-    protected void postDriverStop() {
-    }
+    protected void postDriverStop() {}
 
     protected void postStop() {
     }
-
 
     /**
      * Called after this entity is fully rebound (i.e. it is fully managed).
@@ -570,7 +566,6 @@ public class JavaCloudFoundryPaasWebAppImpl extends AbstractEntity
         throw new IllegalStateException("Cannot configure entity " + this + " in state " + state);
     }
 
-
     /**
      * If custom behaviour is required by sub-classes, consider overriding {@link #doRestart()}.
      */
@@ -598,8 +593,7 @@ public class JavaCloudFoundryPaasWebAppImpl extends AbstractEntity
      * To be overridden instead of {@link #restart()}; sub-classes should call {@code super.doRestart(ConfigBag)} and should
      * add do additional work via tasks, executed using {@link DynamicTasks#queue(String, Callable)}.
      */
-    protected final void doRestart(ConfigBag parameters) {
-    }
+    protected final void doRestart(ConfigBag parameters) {}
 
     protected final void doRestart() {
         doRestart(ConfigBag.EMPTY);

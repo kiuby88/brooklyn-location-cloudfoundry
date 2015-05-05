@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.URL;
 
 public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLocation {
+
     public static final Logger LOG = LoggerFactory.getLogger(CloudFoundryPaasLocation.class);
 
     public static ConfigKey<String> CF_USER = ConfigKeys.newStringConfigKey("user");
@@ -76,4 +77,6 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
     public CloudFoundryClient getCloudFoundryClient() {
         return client;
     }
+
+
 }

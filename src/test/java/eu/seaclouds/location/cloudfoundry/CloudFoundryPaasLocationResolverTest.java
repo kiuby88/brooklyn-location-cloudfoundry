@@ -33,7 +33,6 @@ import static org.testng.Assert.assertNull;
 
 public class CloudFoundryPaasLocationResolverTest {
 
-
     @SuppressWarnings("unused")
     private static final Logger log = LoggerFactory.getLogger(CloudFoundryPaasLocationResolverTest.class);
 

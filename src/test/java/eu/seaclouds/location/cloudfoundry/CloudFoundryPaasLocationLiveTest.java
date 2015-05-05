@@ -18,16 +18,13 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
-import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-
 public class CloudFoundryPaasLocationLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
-
 
     @Test
     public void testClientSetUp() {
@@ -36,7 +33,7 @@ public class CloudFoundryPaasLocationLiveTest extends AbstractCloudFoundryPaasLo
     }
 
     @Test
-    public void testClientSetUpPerLocationInstanve() {
+    public void testClientSetUpPerLocationInstance() {
         cloudFoundryPaasLocation.setUpClient();
         CloudFoundryClient client1 = cloudFoundryPaasLocation.getCloudFoundryClient();
         cloudFoundryPaasLocation.setUpClient();

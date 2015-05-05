@@ -49,4 +49,5 @@ public interface PaasHardwareResources {
     public static final AttributeSensor<Integer> DISK =
             Sensors.newIntegerSensor("app.running.disk", "Assigned disk to the application (MB)");
 
+
 }

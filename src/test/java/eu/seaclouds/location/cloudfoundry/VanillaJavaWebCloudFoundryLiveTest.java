@@ -34,8 +34,8 @@ import org.testng.annotations.Test;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.testng.Assert.*;
 
-public class VanillaJavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
+public class VanillaJavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
     private final String APPLICATION_PATH = checkNotNull(getClass().getClassLoader()
             .getResource("brooklyn-example-hello-world-webapp.war")).getFile();

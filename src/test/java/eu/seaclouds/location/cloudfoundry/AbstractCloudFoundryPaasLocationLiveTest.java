@@ -43,7 +43,6 @@ public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynA
         brooklynProperties = new LocalManagementContext().getBrooklynProperties();
         cloudFoundryPaasLocation = newSampleCloudFoundryLocationForTesting(LOCATION_SPEC_NAME);
         app = TestApplication.Factory.newManagedInstanceForTests();
-
     }
 
     protected LocalManagementContext newLocalManagementContext() {
@@ -54,7 +53,6 @@ public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynA
     public void tearUp() throws Exception {
         if (managementContext != null) Entities.destroyAll(managementContext);
     }
-
 
     protected CloudFoundryPaasLocation newSampleCloudFoundryLocationForTesting(String spec) {
         return (CloudFoundryPaasLocation) managementContext.getLocationRegistry().resolve(spec);
