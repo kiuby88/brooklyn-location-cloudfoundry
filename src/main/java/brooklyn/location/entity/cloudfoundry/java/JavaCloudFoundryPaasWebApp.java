@@ -28,6 +28,6 @@ import brooklyn.location.entity.cloudfoundry.PaasHardwareResources;
  * Java webapp entity for being deployed in a CloudFoundry location.
  */
 @ImplementedBy(JavaCloudFoundryPaasWebAppImpl.class)
-public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp, Entity, Startable, PaasHardwareResources {
+public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp {
     
 }

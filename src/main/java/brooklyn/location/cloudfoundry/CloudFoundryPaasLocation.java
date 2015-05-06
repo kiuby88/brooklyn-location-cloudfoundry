@@ -52,7 +52,6 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
         super.init();
     }
 
-    @Override
     public void setUpClient() {
         if (client == null) {
             CloudCredentials credentials = new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
