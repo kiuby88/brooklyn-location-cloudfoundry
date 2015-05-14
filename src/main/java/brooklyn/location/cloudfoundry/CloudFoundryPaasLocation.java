@@ -16,28 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.location.paas.cloudfoundry;
+package brooklyn.location.cloudfoundry;
 
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
-import brooklyn.location.MachineDetails;
-import brooklyn.location.OsDetails;
 import brooklyn.location.basic.AbstractLocation;
-import brooklyn.util.flags.SetFromFlag;
-import com.google.common.collect.ImmutableSet;
+import brooklyn.location.paas.PaasLocation;
 import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Set;
 
 public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLocation {
+
     public static final Logger LOG = LoggerFactory.getLogger(CloudFoundryPaasLocation.class);
 
     public static ConfigKey<String> CF_USER = ConfigKeys.newStringConfigKey("user");
@@ -48,10 +43,6 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
 
     CloudFoundryClient client;
 
-    @SetFromFlag(nullable = false)
-    protected InetAddress address;
-
-
     public CloudFoundryPaasLocation() {
         super();
     }
@@ -59,14 +50,19 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
     @Override
     public void init() {
         super.init();
-        //init client
-        initClient();
     }
 
-    private void initClient() {
-        CloudCredentials credentials = new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
-        client = new CloudFoundryClient(credentials, getTargetURL(getConfig(CF_ENDPOINT)), getConfig(CF_ORG), getConfig(CF_SPACE), true);
-        client.login();
+    public void setUpClient() {
+        if (client == null) {
+            CloudCredentials credentials = new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
+            client = new CloudFoundryClient(credentials, getTargetURL(getConfig(CF_ENDPOINT)), getConfig(CF_ORG), getConfig(CF_SPACE), true);
+            client.login();
+        }
+    }
+
+    @Override
+    public String getPaasProviderName() {
+        return "CloudFoundry";
     }
 
     private static URL getTargetURL(String target) {
@@ -77,38 +73,9 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
         }
     }
 
-    @Override
-    public InetAddress getAddress() {
-        return address;
-    }
-
-    @Override
-    public OsDetails getOsDetails() {
-        return null;
-    }
-
-    @Override
-    public MachineDetails getMachineDetails() {
-        return null;
-    }
-
     public CloudFoundryClient getCloudFoundryClient() {
         return client;
     }
 
-    @Nullable
-    @Override
-    public String getHostname() {
-        return null;
-    }
 
-    @Override
-    public Set<String> getPublicAddresses() {
-        return null;
-    }
-
-    @Override
-    public Set<String> getPrivateAddresses() {
-        return null;
-    }
 }

@@ -16,12 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.location.paas.cloudfoundry;
+package brooklyn.location.cloudfoundry;
 
-import brooklyn.config.ConfigKey;
-import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.location.Location;
 import brooklyn.location.LocationRegistry;
+import brooklyn.location.LocationResolver;
 import brooklyn.location.LocationSpec;
 import brooklyn.location.basic.BasicLocationRegistry;
 import brooklyn.management.ManagementContext;
@@ -32,13 +31,12 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CloudFoundryPaasLocationResolver extends AbstractPaasLocationResolver {
+public class CloudFoundryPaasLocationResolver implements  LocationResolver {
 
-    public static final Logger log = LoggerFactory.getLogger(CloudFoundryPaasLocationResolver.class);
+    public static final Logger log = LoggerFactory
+            .getLogger(CloudFoundryPaasLocationResolver.class);
 
-    public static final String ClOUD_FOUNDRY = "cloud-foundry";
-    public static ConfigKey<String> ADDRESS = ConfigKeys.newStringConfigKey("address");
-    public static final String PIVOTAL_HOSTNAME = "run.pivotal.io";
+    public static final String ClOUD_FOUNDRY = "cloudfoundry";
 
     private ManagementContext managementContext;
 
@@ -63,10 +61,14 @@ public class CloudFoundryPaasLocationResolver extends AbstractPaasLocationResolv
     }
 
     @Override
-    public Location newLocationFromString(Map locationFlags, String spec, LocationRegistry registry) {
+    @SuppressWarnings("unchecked")
+    public Location newLocationFromString(Map locationFlags,
+                                          String spec,
+                                          LocationRegistry registry) {
         // TODO: TODO
-        locationFlags.put(ADDRESS.getName(), PIVOTAL_HOSTNAME);
         return managementContext.getLocationManager().createLocation(
                 LocationSpec.create(locationFlags, CloudFoundryPaasLocation.class));
     }
+
+
 }
