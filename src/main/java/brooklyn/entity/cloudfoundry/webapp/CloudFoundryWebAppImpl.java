@@ -67,4 +67,12 @@ public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
         setAttribute(BOUND_SERVICES, new LinkedList<String>());
     }
 
+    public String getEnv(){
+        return getAttribute(CloudFoundryWebApp.ENV_VARIABLES);
+    }
+
+    public String getEnv(String envName){
+        return getAttribute(CloudFoundryWebApp.ENV_VARIABLES);
+    }
+
 }
