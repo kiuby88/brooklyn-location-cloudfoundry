@@ -23,14 +23,13 @@ import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.cloudfoundry.PaasEntityCloudFoundryDriver;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
-import org.cloudfoundry.client.lib.domain.CloudApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.cloudfoundry.client.lib.domain.CloudApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundryDriver
@@ -143,7 +142,10 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         getClient().bindService(applicationName, serviceId);
         log.info("The service {} was bound correctly to the application {}", new Object[]{serviceId,
                 applicationName});
-        Map<String, Object> a = getClient().getApplicationEnvironment(applicationName);
+        Map<String, Object> env = getClient().getApplicationEnvironment(applicationName);
+        getEntity().setAttribute(CloudFoundryWebApp.VCAP_SERVICES, 
+                (Map) ((Map) env.get("system_env_json")).get("VCAP_SERVICES"));
+        
     }
 
     //TODO this method could be renamed.

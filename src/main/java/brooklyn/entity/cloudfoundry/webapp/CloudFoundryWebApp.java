@@ -27,8 +27,8 @@ import brooklyn.event.basic.BasicConfigKey;
 import brooklyn.event.basic.Sensors;
 import brooklyn.util.flags.SetFromFlag;
 import com.google.common.reflect.TypeToken;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * Generic web application to be deployed on a CloudFoundry location.
@@ -61,6 +61,12 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity, ProvidesEnv{
     AttributeSensor<String> ROOT_URL =
             Sensors.newStringSensor("webapp.url", "URL of the application");
 
+    public static final AttributeSensor<Map> VCAP_SERVICES = 
+            new BasicAttributeSensor<Map>(new TypeToken<Map>() {},
+                    "vcap.services", 
+                    "JSON information related to services bound to the application, " +
+                    "such as credentials, endpoint information, selected plan, etc.");
+    
     /**
      * @return URL of the CloudFoundry Buildpack needed for building the application
      */
