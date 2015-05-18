@@ -21,6 +21,7 @@ package brooklyn.entity.cloudfoundry.services.sql.cleardb;
 
 import brooklyn.entity.Entity;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.util.collections.MutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,14 @@ public class ClearDbServiceImpl extends CloudFoundryServiceImpl implements Clear
     @Override
     public String getServiceTypeId() {
         return SERVICE_TYPE_ID;
+    }
+
+    @Override
+    /**
+     * This operation carry out the set up of the database.
+     */
+    public void operation(CloudFoundryWebAppImpl app) {
+        getDriver().operation(app);
     }
 
 

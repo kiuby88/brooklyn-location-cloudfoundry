@@ -21,6 +21,8 @@ package brooklyn.entity.cloudfoundry.services;
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntity;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.entity.proxying.ImplementedBy;
 import brooklyn.event.AttributeSensor;
 import brooklyn.event.basic.AttributeSensorAndConfigKey;
@@ -51,6 +53,12 @@ public interface CloudFoundryService extends CloudFoundryEntity {
      * @return
      */
     public String getServiceTypeId();
+
+
+    /**
+     * Operation of this service
+     */
+    public void operation(CloudFoundryWebAppImpl app);
 
 
 }

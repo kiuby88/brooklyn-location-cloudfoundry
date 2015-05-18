@@ -29,6 +29,7 @@ import brooklyn.util.flags.SetFromFlag;
 import com.google.common.reflect.TypeToken;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Generic web application to be deployed on a CloudFoundry location.
@@ -65,5 +66,11 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity {
      * @return URL of the CloudFoundry Buildpack needed for building the application
      */
     public String getBuildpack();
+
+    /**
+     * Retrieves the CF application environment as a Map
+     * @return
+     */
+    public Map<String, Object> getApplicationEnvAsMap();
 
 }

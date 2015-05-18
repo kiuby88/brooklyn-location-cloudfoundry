@@ -43,6 +43,8 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
 
     private final String APPLICATION_PATH = checkNotNull(getClass().getClassLoader()
             .getResource("brooklyn-example-hello-world-webapp.war")).getFile();
+    private final String SQL_FILE_PATH = checkNotNull(getClass().getClassLoader()
+            .getResource("chat-database.sql")).getFile();
 
     private final String SERVICE_NAME = APPLICATION_SERVICE_NAME+"-mysql";
     private final String SERVICE_TYPE_ID = "cleardb";
@@ -50,7 +52,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() throws Exception {
-        if (app != null) Entities.destroyAllCatching(app.getManagementContext());
+        //if (app != null) Entities.destroyAllCatching(app.getManagementContext());
     }
 
     @Test(groups = {"Live"})
@@ -60,6 +62,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
                 .createAndManageChild(EntitySpec.create(ClearDbService.class)
                         .configure("serviceInstanceName", SERVICE_NAME)
                         .configure("plan", SERVICE_PLAN)
+                        .configure("creationScriptUrl", SQL_FILE_PATH)
                         .location(cloudFoundryPaasLocation));
 
         servicesToBind.add(service.getId());
@@ -100,8 +103,8 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
         });
     }
 
-    @Test(expectedExceptions = brooklyn.util.exceptions.PropagatedRuntimeException.class,
-    groups={"Live"})
+    /*@Test(expectedExceptions = brooklyn.util.exceptions.PropagatedRuntimeException.class,
+    groups={"Live"})*/
     protected void deployAppWithNotAvailableServicesEntityTest() throws Exception {
         List<String> servicesToBind=new LinkedList<String>();
 

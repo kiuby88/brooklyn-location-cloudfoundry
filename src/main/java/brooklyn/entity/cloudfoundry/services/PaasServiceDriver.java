@@ -19,6 +19,7 @@
 package brooklyn.entity.cloudfoundry.services;
 
 import brooklyn.entity.cloudfoundry.PaasEntityDriver;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 
 public interface PaasServiceDriver extends PaasEntityDriver {
 
@@ -26,5 +27,10 @@ public interface PaasServiceDriver extends PaasEntityDriver {
      * Kills the process, ungracefully and immediately where possible (e.g. with `kill -9`).
      */
     void deleteService();
+
+    /**
+     * Operation of the service
+     */
+    void operation(CloudFoundryWebAppImpl app);
 
 }

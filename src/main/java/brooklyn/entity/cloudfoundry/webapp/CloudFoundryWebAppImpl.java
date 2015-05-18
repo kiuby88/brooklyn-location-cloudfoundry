@@ -67,4 +67,8 @@ public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
         setAttribute(BOUND_SERVICES, new LinkedList<String>());
     }
 
+    public Map<String, Object> getApplicationEnvAsMap(){
+        return getDriver().getApplicationEnvAsMap();
+    }
+
 }

@@ -20,6 +20,8 @@ package brooklyn.entity.cloudfoundry.webapp;
 
 import brooklyn.entity.cloudfoundry.PaasEntityDriver;
 
+import java.util.Map;
+
 public interface PaasWebAppDriver extends PaasEntityDriver {
 
     //TODO delete?
@@ -27,5 +29,8 @@ public interface PaasWebAppDriver extends PaasEntityDriver {
      * Kills the process, ungracefully and immediately where possible (e.g. with `kill -9`).
      */
     void deleteApplication();
+
+    public Map<String, Object> getApplicationEnvAsMap();
+
 
 }

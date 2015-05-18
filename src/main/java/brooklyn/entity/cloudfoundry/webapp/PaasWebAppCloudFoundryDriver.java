@@ -119,6 +119,8 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
 
             configureBoundService(cloudFoundryService
                     .getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME));
+
+            cloudFoundryService.operation(getEntity());
         } else{
             log.error("The service entity {} is not available from the application {}",
                     new Object[]{serviceEntityId, getEntity()});
@@ -139,11 +141,12 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         }
     }
 
+
     private void bindingServiceToEntity(String serviceId) {
         getClient().bindService(applicationName, serviceId);
         log.info("The service {} was bound correctly to the application {}", new Object[]{serviceId,
                 applicationName});
-        Map<String, Object> a = getClient().getApplicationEnvironment(applicationName);
+
     }
 
     //TODO this method could be renamed.
@@ -212,5 +215,10 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         String defaultDomainName = getClient().getDefaultDomain().getName();
         return name + "-domain." + defaultDomainName;
     }
+
+    public Map<String, Object> getApplicationEnvAsMap(){
+        return getClient().getApplicationEnvironment(getApplicationName());
+    }
+
 
 }
