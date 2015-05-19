@@ -103,8 +103,8 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
         });
     }
 
-    /*@Test(expectedExceptions = brooklyn.util.exceptions.PropagatedRuntimeException.class,
-    groups={"Live"})*/
+    @Test(expectedExceptions = brooklyn.util.exceptions.PropagatedRuntimeException.class,
+    groups={"Live"})
     protected void deployAppWithNotAvailableServicesEntityTest() throws Exception {
         List<String> servicesToBind=new LinkedList<String>();
 

@@ -55,6 +55,10 @@ public abstract class PaasServiceCloudFoundryDriver extends PaasEntityCloudFound
         return (CloudFoundryServiceImpl) super.getEntity();
     }
 
+    public String getServiceInstanceName(){
+        return serviceInstanceName;
+    }
+
     @Override
     public boolean isRunning() {
         return (getClient().getService(serviceInstanceName) != null);

@@ -19,29 +19,25 @@
 package brooklyn.entity.cloudfoundry.services.sql.cleardb;
 
 
+import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
 import brooklyn.entity.cloudfoundry.services.PaasServiceCloudFoundryDriver;
-import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
-import com.google.gson.JsonElement;
-import org.cloudfoundry.client.lib.domain.Staging;
+import com.google.gson.Gson;
+import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDriver
         implements ClearDbServiceDriver{
@@ -67,7 +63,7 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
         try {
             Class.forName(DRIVER).newInstance();
 
-            con = DriverManager.getConnection(createJDBC(app));
+            con = DriverManager.getConnection(createJDBCStringConnection(app));
             stmt = con.createStatement();
             String text = new String(Files.readAllBytes(
                     Paths.get(getEntity().getConfig(ClearDbService.CREATION_SCRIPT_URL))),
@@ -81,54 +77,27 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
         }
     }
 
-    private String createJDBC(CloudFoundryWebAppImpl app){
-        Map<String, Object> clearDbServiceDescription= getClearDbServiceDescription(app);
-        return generateJDBC(getCredentials(clearDbServiceDescription));
-    }
-
-    private Map<String, Object> getClearDbServiceDescription(CloudFoundryWebAppImpl app){
-        List<Map<String, Object>> clearDbServiceList = getClearDbServiceList(app);
-        return  findServiceDescription(clearDbServiceList);
+    private String createJDBCStringConnection(CloudFoundryWebAppImpl app){
+        return generateJDBCFromCredentials(getServiceCredentials(app));
     }
 
     @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> getClearDbServiceList(CloudFoundryWebAppImpl app){
-        String SYSTEM_ENV= "system_env_json";
-        String VCAP_SERVICES= "VCAP_SERVICES";
-
-        Map<String, Object> systemEnvMap = (Map<String, Object>) app.getApplicationEnvAsMap()
-                .get(SYSTEM_ENV);
-        Map<String, Object> vcapServices = (Map<String, Object>) systemEnvMap.get(VCAP_SERVICES);
-        List<Map<String, Object>> cleardbList = (List<Map<String, Object>>) vcapServices
-                .get(getEntity().getServiceTypeId());
-        return cleardbList;
-    }
-
-    private Map<String, Object> findServiceDescription(List<Map<String, Object>> serviceDescriptions) {
-        return findServiceDescription(serviceDescriptions, getEntity()
-                .getConfig(ClearDbService.SERVICE_INSTANCE_NAME));
-    }
-
-    private Map<String, Object> findServiceDescription(List<Map<String, Object>> serviceDescriptions,
-                                                       String serviceId){
-        String NAME="name";
-        Map<String, Object> result=null;
-        for(Map<String, Object> vcapService: serviceDescriptions){
-            if(vcapService.get(NAME).equals(serviceId)){
-                result= vcapService;
-            }
+    public Map<String, String> getServiceCredentials(CloudFoundryWebAppImpl app){
+        JSONArray pathResult= JsonPath.read(new Gson().toJson(app.getApplicationEnvAsMap()),
+                "$.system_env_json.VCAP_SERVICES."
+                        + getEntity().getServiceTypeId()+
+                        "[?(@.name =~/.*" +
+                        getEntity().getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME) +
+                       "/i)].credentials");
+        if((pathResult!=null)&&(pathResult.size()==1)){
+            return ((Map<String, String>) pathResult.get(0));
+        } else {
+            throw new RuntimeException("Error finding a service credentials in driver" + this +
+                    " deploying service "+getEntity().getId());
         }
-        return result;
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<String, String> getCredentials(Map<String, Object> serviceDescription){
-        String CREDENTIALS = "credentials";
-        return (Map<String, String>) serviceDescription.get(CREDENTIALS);
-    }
-
-    private String generateJDBC(Map<String, String> credentials){
-
+    private String generateJDBCFromCredentials(Map<String, String> credentials){
         String hostName = credentials.get("hostname");
         String username = credentials.get("username");
         String port= credentials.get("port");
