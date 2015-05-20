@@ -39,4 +39,6 @@ public interface ClearDbService extends CloudFoundryService{
                     "URL of creation script to use to initialize the datastore " +
                             "(ignored if contents are specified)", "");
 
+    public String getCreationScriptUrl();
+
 }

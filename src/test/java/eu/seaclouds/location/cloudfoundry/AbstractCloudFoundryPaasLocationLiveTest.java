@@ -63,5 +63,9 @@ public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynA
         return (CloudFoundryPaasLocation) managementContext.getLocationRegistry().resolve(spec);
     }
 
+    public static String getLocalFileUrl(String path){
+        return "file://"+path;
+    }
+
 
 }

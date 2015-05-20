@@ -19,12 +19,11 @@
 package eu.seaclouds.location.cloudfoundry;
 
 import brooklyn.entity.basic.Attributes;
-import brooklyn.entity.basic.Entities;
+import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
+import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
-import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
-import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
 import brooklyn.test.Asserts;
@@ -41,10 +40,10 @@ import static org.testng.Assert.*;
 
 public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
-    private final String APPLICATION_PATH = checkNotNull(getClass().getClassLoader()
-            .getResource("brooklyn-example-hello-world-webapp.war")).getFile();
-    private final String SQL_FILE_PATH = checkNotNull(getClass().getClassLoader()
-            .getResource("chat-database.sql")).getFile();
+    private final String APPLICATION_PATH = getLocalFileUrl(checkNotNull(getClass().getClassLoader()
+            .getResource("brooklyn-example-hello-world-webapp.war")).getFile());
+    private final String SQL_FILE_PATH = getLocalFileUrl(checkNotNull(getClass().getClassLoader()
+            .getResource("chat-database.sql")).getFile());
 
     private final String SERVICE_NAME = APPLICATION_SERVICE_NAME+"-mysql";
     private final String SERVICE_TYPE_ID = "cleardb";
@@ -57,6 +56,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
 
     @Test(groups = {"Live"})
     protected void deployAppWithServicesTest() throws Exception {
+
         List<String> servicesToBind=new LinkedList<String>();
         final CloudFoundryService service = app
                 .createAndManageChild(EntitySpec.create(ClearDbService.class)

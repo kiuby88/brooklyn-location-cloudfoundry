@@ -18,6 +18,7 @@
  */
 package brooklyn.entity.cloudfoundry.webapp.java;
 
+import brooklyn.entity.cloudfoundry.LocalResourcesDownloader;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.PaasWebAppCloudFoundryDriver;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
@@ -51,26 +52,29 @@ public class JavaPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDriv
 
     @Override
     public void deploy() {
-        List<String> serviceNames = null;
+
+
         List<String> uris = new ArrayList<String>();
         Staging staging;
         File war;
         try {
             staging = new Staging(null, getBuildpack());
             uris.add(inferApplicationDomainUri(getApplicationName()));
-            //fixme a URI in necessary
-            war = new File(getApplicationPath());
+
+            war=LocalResourcesDownloader
+                    .downloadResourceInLocalDir(getApplicationPath());
 
             getClient().createApplication(getApplicationName(), staging,
                     getEntity().getConfig(CloudFoundryWebApp.REQUIRED_MEMORY),
-                    uris, serviceNames);
+                    uris, null);
             getClient().uploadApplication(getApplicationName(), war.getCanonicalPath());
-
         } catch (IOException e) {
             log.error("Error deploying application {} managed by driver {}",
                     new Object[]{getEntity(), this});
         }
     }
+
+
 
 
 }

@@ -37,8 +37,8 @@ import static org.testng.Assert.*;
 
 public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
-    private final String APPLICATION_PATH = checkNotNull(getClass().getClassLoader()
-            .getResource("brooklyn-example-hello-world-webapp.war")).getFile();
+    private final String APPLICATION_PATH = getLocalFileUrl(checkNotNull(getClass().getClassLoader()
+            .getResource("brooklyn-example-hello-world-webapp.war")).getFile());
 
 
     @AfterMethod(alwaysRun = true)

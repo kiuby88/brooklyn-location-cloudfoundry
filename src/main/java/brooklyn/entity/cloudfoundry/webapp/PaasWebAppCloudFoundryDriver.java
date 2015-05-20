@@ -141,7 +141,6 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         }
     }
 
-
     private void bindingServiceToEntity(String serviceId) {
         getClient().bindService(applicationName, serviceId);
         log.info("The service {} was bound correctly to the application {}", new Object[]{serviceId,

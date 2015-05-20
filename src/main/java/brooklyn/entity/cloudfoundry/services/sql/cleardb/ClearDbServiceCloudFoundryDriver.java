@@ -19,18 +19,20 @@
 package brooklyn.entity.cloudfoundry.services.sql.cleardb;
 
 
+import brooklyn.entity.cloudfoundry.LocalResourcesDownloader;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
 import brooklyn.entity.cloudfoundry.services.PaasServiceCloudFoundryDriver;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
+import brooklyn.util.text.Strings;
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -57,18 +59,30 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
 
     @Override
     public void operation(CloudFoundryWebAppImpl app) {
-        String DRIVER = "com.mysql.jdbc.Driver";
+        if(!Strings.isBlank(getEntity().getCreationScriptUrl())){
+            creationScriptOperation(app);
+        }
+    }
+
+    public void creationScriptOperation(CloudFoundryWebAppImpl app) {
         Connection con;
         Statement stmt;
+        File sqlFile;
+        String DRIVER = "com.mysql.jdbc.Driver";
+
         try {
             Class.forName(DRIVER).newInstance();
 
             con = DriverManager.getConnection(createJDBCStringConnection(app));
             stmt = con.createStatement();
-            String text = new String(Files.readAllBytes(
-                    Paths.get(getEntity().getConfig(ClearDbService.CREATION_SCRIPT_URL))),
+            sqlFile= LocalResourcesDownloader
+                    .downloadResourceInLocalDir(getEntity().getCreationScriptUrl());
+
+            String sqlContent = new String(Files.readAllBytes(
+                    Paths.get(sqlFile.getAbsolutePath())),
                     StandardCharsets.UTF_8);
-            stmt.execute(text);
+
+            stmt.execute(sqlContent);
             stmt.close();
             con.close();
         } catch (Exception e) {
