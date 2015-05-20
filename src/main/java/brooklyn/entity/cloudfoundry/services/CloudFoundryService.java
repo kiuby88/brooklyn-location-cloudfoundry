@@ -21,7 +21,6 @@ package brooklyn.entity.cloudfoundry.services;
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntity;
-import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.entity.proxying.ImplementedBy;
 import brooklyn.event.AttributeSensor;
@@ -29,6 +28,7 @@ import brooklyn.event.basic.AttributeSensorAndConfigKey;
 import brooklyn.event.basic.Sensors;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import brooklyn.util.flags.SetFromFlag;
+import brooklyn.util.text.Identifiers;
 
 @ImplementedBy(CloudFoundryServiceImpl.class)
 public interface CloudFoundryService extends CloudFoundryEntity {
@@ -38,7 +38,8 @@ public interface CloudFoundryService extends CloudFoundryEntity {
 
     @SetFromFlag("serviceInstanceName")
     ConfigKey<String> SERVICE_INSTANCE_NAME = ConfigKeys.newStringConfigKey(
-            "cloudFoundry.service.instance.name", "Given name for the service instance");
+            "cloudFoundry.service.instance.name", "Given name for the service instance", 
+            "cf-service-" + Identifiers.makeRandomId(8));
 
     @SetFromFlag("plan")
     AttributeSensorAndConfigKey<String, String> PLAN = ConfigKeys.newStringSensorAndConfigKey(

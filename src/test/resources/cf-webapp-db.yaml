@@ -1,0 +1,18 @@
+name: CF - appserver-w-db
+services:
+- type: brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp
+  name: AppServer HelloWorld 
+  id: webapp
+  location: cloudfoundry-instance
+  brooklyn.config:
+    application-name: test-brooklyn-service-mysql-from-yaml
+    application-path: /Users/mbarrientos/Projects/brooklyn-location-cloudfoundry/brooklyn-example-hello-world-webapp.war
+    bind: 
+    - $brooklyn:component("db")
+- type: brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService
+  id: db
+  name: DB HelloWorld Visitors
+  location: cloudfoundry-instance
+  brooklyn.config:
+    serviceInstanceName: test-brooklyn-service-mysql-from-yaml
+    plan: spark

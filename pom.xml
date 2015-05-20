@@ -71,6 +71,13 @@
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.brooklyn</groupId>
+            <artifactId>brooklyn-launcher</artifactId>
+            <version>${brooklyn.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <!-- this gives us flexible and easy-to-use logging; just edit logback-custom.xml! -->
@@ -142,6 +149,7 @@
                         <exclude>**/sandbox/examples/src/main/scripts/amis.txt</exclude>
                         <!-- see notes in https://issues.apache.org/jira/browse/BROOKLYN-18 -->
                         <exclude>**/*.yml</exclude>
+                        <exclude>**/*.yaml</exclude>
                         <exclude>**/*.md</exclude>
                         <!--
                             docs are not part of the distribution: they are just used to populate

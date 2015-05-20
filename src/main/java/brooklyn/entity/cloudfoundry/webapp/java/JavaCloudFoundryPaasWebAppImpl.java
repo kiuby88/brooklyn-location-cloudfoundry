@@ -22,11 +22,9 @@ package brooklyn.entity.cloudfoundry.webapp.java;
 import brooklyn.entity.Entity;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.util.collections.MutableMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class JavaCloudFoundryPaasWebAppImpl extends CloudFoundryWebAppImpl implements JavaCloudFoundryPaasWebApp {
@@ -63,4 +61,5 @@ public class JavaCloudFoundryPaasWebAppImpl extends CloudFoundryWebAppImpl imple
     public String getBuildpack() {
         return getConfig(BUILDPACK);
     }
+
 }

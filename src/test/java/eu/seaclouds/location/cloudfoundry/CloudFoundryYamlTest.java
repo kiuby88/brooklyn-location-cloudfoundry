@@ -16,16 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.entity.cloudfoundry.webapp;
+package eu.seaclouds.location.cloudfoundry;
 
-import brooklyn.entity.cloudfoundry.PaasEntityDriver;
+import brooklyn.launcher.camp.SimpleYamlLauncher;
+import org.testng.annotations.Test;
 
-public interface PaasWebAppDriver extends PaasEntityDriver {
-
-    //TODO delete?
-    /**
-     * Kills the process, ungracefully and immediately where possible (e.g. with `kill -9`).
-     */
-    void deleteApplication();
-
+public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTest {
+    
+    @Test( groups={"Live"} )
+    public void deployWebappWithServicesFromYaml(){
+        SimpleYamlLauncher launcher = new SimpleYamlLauncher();
+        launcher.setShutdownAppsOnExit(true);
+        launcher.launchAppYaml("cf-webapp-db.yaml");
+    }
 }

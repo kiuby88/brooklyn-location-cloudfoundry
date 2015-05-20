@@ -23,6 +23,7 @@ import brooklyn.entity.cloudfoundry.LocalResourcesDownloader;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
 import brooklyn.entity.cloudfoundry.services.PaasServiceCloudFoundryDriver;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import brooklyn.util.text.Strings;
@@ -97,7 +98,7 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
 
     @SuppressWarnings("unchecked")
     public Map<String, String> getServiceCredentials(CloudFoundryWebAppImpl app){
-        JSONArray pathResult= JsonPath.read(new Gson().toJson(app.getApplicationEnvAsMap()),
+        JSONArray pathResult= JsonPath.read(new Gson().toJson(app.getAttribute(CloudFoundryWebApp.VCAP_SERVICES)),
                 "$.system_env_json.VCAP_SERVICES."
                         + getEntity().getServiceTypeId()+
                         "[?(@.name =~/.*" +

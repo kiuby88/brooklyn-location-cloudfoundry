@@ -36,7 +36,7 @@ public class CloudFoundryPaasLocationResolver implements  LocationResolver {
     public static final Logger log = LoggerFactory
             .getLogger(CloudFoundryPaasLocationResolver.class);
 
-    public static final String ClOUD_FOUNDRY = "cloudfoundry";
+    public static final String CLOUD_FOUNDRY = "cloudfoundry";
 
     private ManagementContext managementContext;
 
@@ -47,7 +47,7 @@ public class CloudFoundryPaasLocationResolver implements  LocationResolver {
 
     @Override
     public String getPrefix() {
-        return ClOUD_FOUNDRY;
+        return CLOUD_FOUNDRY;
     }
 
     @Override

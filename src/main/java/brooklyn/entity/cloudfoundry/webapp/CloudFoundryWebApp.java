@@ -19,6 +19,7 @@
 package brooklyn.entity.cloudfoundry.webapp;
 
 import brooklyn.config.ConfigKey;
+import brooklyn.entity.Entity;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntity;
 import brooklyn.event.AttributeSensor;
@@ -26,19 +27,19 @@ import brooklyn.event.basic.BasicAttributeSensor;
 import brooklyn.event.basic.BasicConfigKey;
 import brooklyn.event.basic.Sensors;
 import brooklyn.util.flags.SetFromFlag;
+import brooklyn.util.text.Identifiers;
 import com.google.common.reflect.TypeToken;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * Generic web application to be deployed on a CloudFoundry location.
  */
-public interface CloudFoundryWebApp extends CloudFoundryEntity {
+public interface CloudFoundryWebApp extends CloudFoundryEntity{
 
     @SetFromFlag("application-name")
     ConfigKey<String> APPLICATION_NAME = ConfigKeys.newStringConfigKey(
-            "cloudFoundryWebApp.application.name", "Name of the application");
+            "cloudFoundryWebApp.application.name", "Name of the application"
+    , "cf-app-" + Identifiers.makeRandomId(8));
 
     @SetFromFlag("application-path")
     ConfigKey<String> APPLICATION_PATH = ConfigKeys.newStringConfigKey(
@@ -46,7 +47,7 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity {
 
     @SuppressWarnings("unchecked")
     @SetFromFlag("bind")
-    ConfigKey<List<String>> NAMED_SERVICES = new BasicConfigKey(List.class,
+    ConfigKey<List<Entity>> NAMED_SERVICES = new BasicConfigKey(List.class,
             "cloudFoundry.webapp.boundServices",
             "List of names of the services that should be bound to this application, " +
                     "providing credentials for its usage");
@@ -62,15 +63,15 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity {
     AttributeSensor<String> ROOT_URL =
             Sensors.newStringSensor("webapp.url", "URL of the application");
 
+    public static final AttributeSensor<String> VCAP_SERVICES = 
+            Sensors.newStringSensor( "vcap.services", 
+                    "JSON information related to services bound to the application, " +
+                    "such as credentials, endpoint information, selected plan, etc.");
+    
     /**
      * @return URL of the CloudFoundry Buildpack needed for building the application
      */
     public String getBuildpack();
 
-    /**
-     * Retrieves the CF application environment as a Map
-     * @return
-     */
-    public Map<String, Object> getApplicationEnvAsMap();
 
 }

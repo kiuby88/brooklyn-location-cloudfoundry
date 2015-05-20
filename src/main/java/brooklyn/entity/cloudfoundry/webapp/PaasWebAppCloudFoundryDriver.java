@@ -23,14 +23,16 @@ import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.cloudfoundry.PaasEntityCloudFoundryDriver;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
-import org.cloudfoundry.client.lib.domain.CloudApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import brooklyn.util.text.Strings;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.cloudfoundry.client.lib.domain.CloudApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundryDriver
@@ -99,9 +101,9 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     }
 
     private void bindServices() {
-        List<String> config = getEntity().getConfig(CloudFoundryWebApp.NAMED_SERVICES);
+        List<Entity> config = getEntity().getConfig(CloudFoundryWebApp.NAMED_SERVICES);
         if (config != null) {
-            for (String serviceEntityId : config) {
+            for (Entity serviceEntityId : config) {
                 bindService(serviceEntityId);
             }
         }
@@ -109,34 +111,42 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
 
     /*TODO RENAME Method. It could be represent that the service is bound and the service
      operation is called*/
-    private void bindService(String serviceEntityId){
+    private void bindService(Entity rawEntity){
 
-        CloudFoundryService cloudFoundryService = findServiceEntityById(serviceEntityId);
-
-        if(cloudFoundryService!=null) {
-            bindingServiceToEntity(cloudFoundryService
-                    .getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME));
-
-            configureBoundService(cloudFoundryService
-                    .getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME));
-
+        CloudFoundryService cloudFoundryService;
+        if (rawEntity instanceof CloudFoundryService){
+            cloudFoundryService = (CloudFoundryService) rawEntity;
+        
+            String serviceName = cloudFoundryService
+                    .getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME);
+            if (Strings.isEmpty(serviceName)){
+                log.error("Trying to get service instance name from {}, but getting null", cloudFoundryService);
+            }
+            bindingServiceToEntity(serviceName);
+            configureBoundService(serviceName);
+            
             cloudFoundryService.operation(getEntity());
-        } else{
+        } else {
             log.error("The service entity {} is not available from the application {}",
-                    new Object[]{serviceEntityId, getEntity()});
+                    new Object[]{rawEntity, getEntity()});
 
-            throw new NoSuchElementException("No entity matching id " + serviceEntityId +
-                    "in Management Context "+getEntity().getManagementContext()+
+            throw new NoSuchElementException("No entity matching id " + rawEntity.getId() +
+                    " in Management Context "+getEntity().getManagementContext()+
                     " during entity service binding "+getEntity().getId());
         }
     }
-
-    private CloudFoundryService findServiceEntityById(String entityId){
-        Entity serviceEntity= getEntity().getManagementContext()
-                .getEntityManager().getEntity(entityId);
-        if(serviceEntity instanceof CloudFoundryService){
-            return (CloudFoundryService) serviceEntity;
+    
+    private CloudFoundryService findServiceEntityById(final String entityId){
+        Entity rawEntity = getEntity().getManagementContext()
+            .getEntityManager().getEntity(entityId);
+        
+        if(rawEntity instanceof CloudFoundryService){
+            return (CloudFoundryService) rawEntity;
+        } else if (rawEntity == null) {
+            log.error("Service id {} couldn't be found on ManagementContext", entityId);
+            return null;
         } else {
+            log.error("Service id {} is not an instance of CloudFoundryService", entityId);
             return null;
         }
     }
@@ -145,7 +155,10 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         getClient().bindService(applicationName, serviceId);
         log.info("The service {} was bound correctly to the application {}", new Object[]{serviceId,
                 applicationName});
-
+        Map<String, Object> env = getClient().getApplicationEnvironment(applicationName);
+        JsonObject envTree = new Gson().toJsonTree(env).getAsJsonObject();
+        getEntity().setAttribute(CloudFoundryWebApp.VCAP_SERVICES,
+                envTree.getAsJsonObject("system_env_json").getAsJsonObject("VCAP_SERVICES").toString());
     }
 
     //TODO this method could be renamed.
@@ -214,10 +227,5 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         String defaultDomainName = getClient().getDefaultDomain().getName();
         return name + "-domain." + defaultDomainName;
     }
-
-    public Map<String, Object> getApplicationEnvAsMap(){
-        return getClient().getApplicationEnvironment(getApplicationName());
-    }
-
 
 }
