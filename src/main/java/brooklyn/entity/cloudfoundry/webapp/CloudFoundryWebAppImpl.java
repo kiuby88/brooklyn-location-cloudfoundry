@@ -20,6 +20,8 @@ package brooklyn.entity.cloudfoundry.webapp;
 
 
 import brooklyn.entity.Entity;
+import brooklyn.entity.annotation.Effector;
+import brooklyn.entity.annotation.EffectorParam;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntityImpl;
 import brooklyn.util.collections.MutableMap;
 import org.slf4j.Logger;
@@ -65,6 +67,18 @@ public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
 
     private void initAtributesValues(){
         setAttribute(BOUND_SERVICES, new LinkedList<String>());
+    }
+    
+    @Override
+    @Effector(description="Set an environment variable that can be retrieved by the web application")
+    public void setEnv(@EffectorParam(name = "name", description = "Name of the variable") String key,
+                       @EffectorParam(name = "value", description = "Value of the environment variable") String value) {
+        PaasWebAppDriver driver = getDriver();
+        if (driver != null) {
+            driver.setEnv(key, value);   
+        } else {
+            log.error("Error setting environment variable {} = {} on entity {}", key, this.getEntityTypeName());
+        }
     }
 
 }

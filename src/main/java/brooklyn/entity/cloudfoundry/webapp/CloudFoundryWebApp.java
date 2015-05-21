@@ -20,16 +20,20 @@ package brooklyn.entity.cloudfoundry.webapp;
 
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.Entity;
+import brooklyn.entity.annotation.Effector;
+import brooklyn.entity.annotation.EffectorParam;
 import brooklyn.entity.basic.ConfigKeys;
+import brooklyn.entity.basic.MethodEffector;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntity;
 import brooklyn.event.AttributeSensor;
 import brooklyn.event.basic.BasicAttributeSensor;
 import brooklyn.event.basic.BasicConfigKey;
+import brooklyn.event.basic.MapConfigKey;
 import brooklyn.event.basic.Sensors;
 import brooklyn.util.flags.SetFromFlag;
 import brooklyn.util.text.Identifiers;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
-
 import java.util.List;
 
 /**
@@ -61,6 +65,12 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity{
             "List of names of the services that were bound to this application, " +
                     "providing credentials for its usage");
 
+    @SetFromFlag("env")
+    public static final MapConfigKey<String> ENV = 
+            new MapConfigKey<String>(String.class, "cloudfoundry.webapp.env", 
+                    "List of user-defined environment variables",
+                    ImmutableMap.<String, String>of());
+    
     AttributeSensor<String> ROOT_URL =
             Sensors.newStringSensor("webapp.url", "URL of the application");
 
@@ -74,5 +84,10 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity{
      */
     public String getBuildpack();
 
+    public static final MethodEffector<Void> DEPLOY = new MethodEffector<Void>(CloudFoundryWebApp.class, "setEnv");
 
+    @Effector(description="Set an environment variable that can be retrieved by the web application")
+    public void setEnv(@EffectorParam(name="name", description="Name of the variable") String key, 
+                       @EffectorParam(name="value", description="Value of the environment variable") String value);
+    
 }

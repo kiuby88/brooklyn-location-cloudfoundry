@@ -28,4 +28,5 @@ public interface PaasWebAppDriver extends PaasEntityDriver {
      */
     void deleteApplication();
 
+    public void setEnv(String key, String value);
 }

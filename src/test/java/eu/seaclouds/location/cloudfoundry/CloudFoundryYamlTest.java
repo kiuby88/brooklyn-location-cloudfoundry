@@ -18,7 +18,10 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
+import brooklyn.entity.Application;
+import brooklyn.entity.Entity;
 import brooklyn.launcher.camp.SimpleYamlLauncher;
+import java.util.Collection;
 import org.testng.annotations.Test;
 
 public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTest {
@@ -26,8 +29,11 @@ public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTe
     @Test( groups={"Live"} )
     public void deployWebappWithServicesFromYaml(){
         SimpleYamlLauncher launcher = new SimpleYamlLauncher();
-        launcher.setShutdownAppsOnExit(true);
-        launcher.launchAppYaml("cf-webapp-db.yaml");
+        launcher.setShutdownAppsOnExit(false);
+        Application app = launcher.launchAppYaml("cf-webapp-db.yaml");
+
+        app.getManagementContext();
+        Collection<Entity> children = app.getChildren();
     }
 
 

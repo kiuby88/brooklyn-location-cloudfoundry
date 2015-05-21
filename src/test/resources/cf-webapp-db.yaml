@@ -9,6 +9,10 @@ services:
     application-path: classpath://brooklyn-example-hello-world-webapp.war
     bind: 
     - $brooklyn:component("db")
+    env: 
+      myDbJdbcUrl: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.jdbcUrl")
+      myDbName: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.name")
+
 - type: brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService
   id: db
   name: DB HelloWorld Visitors

@@ -22,6 +22,7 @@ import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.proxying.ImplementedBy;
+import brooklyn.event.basic.MapConfigKey;
 import brooklyn.util.flags.SetFromFlag;
 
 /**
@@ -34,4 +35,10 @@ public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp {
     ConfigKey<String> BUILDPACK= ConfigKeys.newStringConfigKey(
             "cloudFoundryWebApp.application.buildpack", "URL of the required buildpack",
             "https://github.com/cloudfoundry/java-buildpack.git");
+    
+    // TODO: I think that java.sysprops are dependent on the buildpack.
+    @SetFromFlag("java.sysprops")
+    MapConfigKey<String> JAVA_SYSPROPS = new MapConfigKey<String>(String.class,
+            "cloudfoundry.java.sysprops",
+            "System properties to be passed to the buildpack");
 }

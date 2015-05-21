@@ -20,12 +20,15 @@ package brooklyn.entity.cloudfoundry.services;
 
 import brooklyn.entity.Entity;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntityImpl;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
+import brooklyn.event.basic.Sensors;
 import brooklyn.util.collections.MutableMap;
+import com.jayway.jsonpath.JsonPath;
+import java.util.Map;
+import javax.annotation.Nullable;
+import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
-import java.util.Map;
 
 //TODO refactor this class and CloudFoundryServiceImpl and delete the duplicate code
 public abstract class CloudFoundryServiceImpl extends CloudFoundryEntityImpl
@@ -73,4 +76,38 @@ public abstract class CloudFoundryServiceImpl extends CloudFoundryEntityImpl
     }
 
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public void setBindingCredentialsFromApp(CloudFoundryWebApp webapp) {
+        Map<String, String> credentials;
+        String vcapServices = webapp.getAttribute(CloudFoundryWebApp.VCAP_SERVICES);
+        String webappName = webapp.getConfig(CloudFoundryWebApp.APPLICATION_NAME);
+        JSONArray credentialsList = JsonPath.read(vcapServices,
+                "$.cleardb[?(@.name =~/.*" + webappName + "/i)].credentials");
+        if((credentialsList!=null)&&(credentialsList.size()==1)){
+            credentials = ((Map<String, String>) credentialsList.get(0));
+        } else {
+            throw new RuntimeException("Error finding a service credentials in driver" + this +
+                    " deploying service "+getId());
+        }
+        
+        setAttribute(Sensors.newStringSensor(webappName + ".credentials.jdbcUrl",
+                        "JDBC URL to access the database (from app " + webappName + ")"),
+                credentials.get("jdbcUrl"));
+        setAttribute(Sensors.newStringSensor(webappName + ".credentials.name",
+                        "name of the database created for app " + webappName ),
+                credentials.get("name"));
+        setAttribute(Sensors.newStringSensor(webappName + ".credentials.hostname",
+                        "hostname of the database created for app " + webappName ),
+                credentials.get("hostname"));
+        setAttribute(Sensors.newStringSensor(webappName + ".credentials.port",
+                        "HTTP port to access the database created for app " + webappName ),
+                credentials.get("port"));
+        setAttribute(Sensors.newStringSensor(webappName + ".credentials.username",
+                        "username for the database created for app " + webappName ),
+                credentials.get("username"));
+        setAttribute(Sensors.newStringSensor(webappName + ".credentials.password",
+                        "password for the database created for app " + webappName ),
+                credentials.get("password"));
+    }
 }
