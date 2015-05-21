@@ -29,6 +29,7 @@ import brooklyn.event.basic.Sensors;
 import brooklyn.util.flags.SetFromFlag;
 import brooklyn.util.text.Identifiers;
 import com.google.common.reflect.TypeToken;
+
 import java.util.List;
 
 /**

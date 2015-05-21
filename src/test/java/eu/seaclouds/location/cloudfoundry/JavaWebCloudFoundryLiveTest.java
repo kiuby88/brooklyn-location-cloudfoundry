@@ -37,8 +37,13 @@ import static org.testng.Assert.*;
 
 public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
-    private final String APPLICATION_PATH = getLocalFileUrl(checkNotNull(getClass().getClassLoader()
-            .getResource("brooklyn-example-hello-world-webapp.war")).getFile());
+    private final String APPLICATION_ARTIFACT_NAME = "brooklyn-example-hello-world-webapp.war";
+
+
+    private final String APPLICATION_ARTIFACT_PATH =
+            getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
+
+
 
 
     @AfterMethod(alwaysRun = true)
@@ -51,7 +56,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_PATH)
+                        .configure("application-path", APPLICATION_ARTIFACT_PATH)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));
@@ -80,7 +85,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", "stopped" + APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_PATH)
+                        .configure("application-path", APPLICATION_ARTIFACT_PATH)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));
@@ -102,7 +107,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", "wrong-" + APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_PATH + "wrong")
+                        .configure("application-path", APPLICATION_ARTIFACT_PATH + "wrong")
                         .location(cloudFoundryPaasLocation));
 
         Asserts.succeedsEventually(new Runnable() {

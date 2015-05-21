@@ -19,24 +19,19 @@
 package brooklyn.entity.cloudfoundry.services.sql.cleardb;
 
 
-import brooklyn.entity.cloudfoundry.LocalResourcesDownloader;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
 import brooklyn.entity.cloudfoundry.services.PaasServiceCloudFoundryDriver;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
+import brooklyn.util.ResourceUtils;
 import brooklyn.util.text.Strings;
-import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -68,7 +63,6 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
     public void creationScriptOperation(CloudFoundryWebAppImpl app) {
         Connection con;
         Statement stmt;
-        File sqlFile;
         String DRIVER = "com.mysql.jdbc.Driver";
 
         try {
@@ -76,12 +70,9 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
 
             con = DriverManager.getConnection(createJDBCStringConnection(app));
             stmt = con.createStatement();
-            sqlFile= LocalResourcesDownloader
-                    .downloadResourceInLocalDir(getEntity().getCreationScriptUrl());
+            String sqlContent;
 
-            String sqlContent = new String(Files.readAllBytes(
-                    Paths.get(sqlFile.getAbsolutePath())),
-                    StandardCharsets.UTF_8);
+            sqlContent = getContentResourceFromUrl(getEntity().getCreationScriptUrl());
 
             stmt.execute(sqlContent);
             stmt.close();
@@ -98,12 +89,13 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
 
     @SuppressWarnings("unchecked")
     public Map<String, String> getServiceCredentials(CloudFoundryWebAppImpl app){
-        JSONArray pathResult= JsonPath.read(new Gson().toJson(app.getAttribute(CloudFoundryWebApp.VCAP_SERVICES)),
-                "$.system_env_json.VCAP_SERVICES."
-                        + getEntity().getServiceTypeId()+
+
+
+        JSONArray pathResult= JsonPath.read(app.getAttribute(CloudFoundryWebApp.VCAP_SERVICES),
+                "$." + getEntity().getServiceTypeId() +
                         "[?(@.name =~/.*" +
                         getEntity().getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME) +
-                       "/i)].credentials");
+                        "/i)].credentials");
         if((pathResult!=null)&&(pathResult.size()==1)){
             return ((Map<String, String>) pathResult.get(0));
         } else {
@@ -126,6 +118,11 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
                 username,
                 password);
         return url;
+    }
+
+    private String getContentResourceFromUrl(String url){
+        return new ResourceUtils(getEntity())
+                .getResourceAsString(url);
     }
 
 

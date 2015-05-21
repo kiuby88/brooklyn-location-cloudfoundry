@@ -6,7 +6,7 @@ services:
   location: cloudfoundry-instance
   brooklyn.config:
     application-name: test-brooklyn-service-mysql-from-yaml
-    application-path: /Users/mbarrientos/Projects/brooklyn-location-cloudfoundry/brooklyn-example-hello-world-webapp.war
+    application-path: classpath://brooklyn-example-hello-world-webapp.war
     bind: 
     - $brooklyn:component("db")
 - type: brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService
@@ -14,5 +14,6 @@ services:
   name: DB HelloWorld Visitors
   location: cloudfoundry-instance
   brooklyn.config:
+    creationScriptUrl: classpath://chat-database.sql
     serviceInstanceName: test-brooklyn-service-mysql-from-yaml
     plan: spark

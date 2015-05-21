@@ -18,6 +18,7 @@
  */
 package brooklyn.entity.cloudfoundry;
 
+import brooklyn.util.ResourceUtils;
 import brooklyn.util.os.Os;
 import brooklyn.util.text.Strings;
 import com.google.common.base.Throwables;
@@ -25,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,15 +80,15 @@ public class LocalResourcesDownloader {
 
     public static void downloadResource(String url, File target){
             try {
-                downloadResource(new URL(url), target);
+                downloadResource(new ResourceUtils(null).getResourceFromUrl(url), target);
             } catch (Exception e) {
                 throw Throwables.propagate(e);
             }
     }
 
-    public static void downloadResource(URL url, File target){
+    public static void downloadResource(InputStream source, File target){
         try {
-            FileUtils.copyURLToFile(url, target);
+            FileUtils.copyInputStreamToFile(source, target);
         } catch (IOException e) {
             throw Throwables.propagate(e);
         }

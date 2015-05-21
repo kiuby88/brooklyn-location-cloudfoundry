@@ -69,10 +69,10 @@ public class ClearDbServiceImpl extends CloudFoundryServiceImpl implements Clear
         return getConfig(ClearDbService.CREATION_SCRIPT_URL);
     }
 
-    @Override
     /**
      * This operation carry out the set up of the database.
      */
+    @Override
     public void operation(CloudFoundryWebAppImpl app) {
         getDriver().operation(app);
     }

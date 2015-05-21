@@ -30,6 +30,8 @@ import org.testng.annotations.BeforeMethod;
 
 import java.util.UUID;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynAppLiveTestSupport {
 
@@ -65,6 +67,10 @@ public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynA
 
     public static String getLocalFileUrl(String path){
         return "file://"+path;
+    }
+
+    public String getClasspathUrlForResource(String resourceName){
+        return "classpath://"+ resourceName;
     }
 
 

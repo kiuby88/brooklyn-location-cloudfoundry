@@ -18,7 +18,9 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
+import brooklyn.entity.Entity;
 import brooklyn.entity.basic.Attributes;
+import brooklyn.entity.basic.Entities;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
@@ -34,16 +36,18 @@ import org.testng.annotations.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.testng.Assert.*;
 
 
 public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
-    private final String APPLICATION_PATH = getLocalFileUrl(checkNotNull(getClass().getClassLoader()
-            .getResource("brooklyn-example-hello-world-webapp.war")).getFile());
-    private final String SQL_FILE_PATH = getLocalFileUrl(checkNotNull(getClass().getClassLoader()
-            .getResource("chat-database.sql")).getFile());
+
+    private final String SQL_ARTIFACT_NAME = "chat-database.sql";
+    private final String APPLICATION_ARTIFACT_NAME = "brooklyn-example-hello-world-webapp.war";
+
+    private final String SQL_ARTIFACT_PATH =getClasspathUrlForResource(SQL_ARTIFACT_NAME);
+    private final String APPLICATION_ARTIFACT_PATH =
+            getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
 
     private final String SERVICE_NAME = APPLICATION_SERVICE_NAME+"-mysql";
     private final String SERVICE_TYPE_ID = "cleardb";
@@ -51,25 +55,26 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() throws Exception {
-        //if (app != null) Entities.destroyAllCatching(app.getManagementContext());
+        if (app != null) Entities.destroyAllCatching(app.getManagementContext());
     }
 
     @Test(groups = {"Live"})
     protected void deployAppWithServicesTest() throws Exception {
 
-        List<String> servicesToBind=new LinkedList<String>();
+        //List<String> servicesToBind=new LinkedList<String>();
+        List<Entity> servicesToBind=new LinkedList<Entity>();
         final CloudFoundryService service = app
                 .createAndManageChild(EntitySpec.create(ClearDbService.class)
                         .configure("serviceInstanceName", SERVICE_NAME)
                         .configure("plan", SERVICE_PLAN)
-                        .configure("creationScriptUrl", SQL_FILE_PATH)
+                        .configure("creationScriptUrl", SQL_ARTIFACT_PATH)
                         .location(cloudFoundryPaasLocation));
 
-        servicesToBind.add(service.getId());
+        servicesToBind.add(service);
         final JavaCloudFoundryPaasWebApp server = app
                 .createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", APPLICATION_NAME + "-withServices")
-                        .configure("application-path", APPLICATION_PATH)
+                        .configure("application-path", APPLICATION_ARTIFACT_PATH)
                         .configure("bind", servicesToBind)
                         .location(cloudFoundryPaasLocation));
 
@@ -113,7 +118,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
                     .createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                             .configure("application-name",
                                     APPLICATION_NAME + "-withNotAvailableService")
-                            .configure("application-path", APPLICATION_PATH)
+                            .configure("application-path", APPLICATION_ARTIFACT_PATH)
                             .configure("bind", servicesToBind)
                             .location(cloudFoundryPaasLocation));
             app.start(ImmutableList.of(cloudFoundryPaasLocation));
