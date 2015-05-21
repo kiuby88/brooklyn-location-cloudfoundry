@@ -28,5 +28,10 @@ public interface PaasWebAppDriver extends PaasEntityDriver {
      */
     void deleteApplication();
 
-    public void setEnv(String key, String value);
+    /**
+     * Allows to add a custim environment variable to an application
+     * @param key
+     * @param value
+     */
+    void setEnv(String key, String value);
 }

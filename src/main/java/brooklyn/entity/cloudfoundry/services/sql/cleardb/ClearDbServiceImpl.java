@@ -21,7 +21,9 @@ package brooklyn.entity.cloudfoundry.services.sql.cleardb;
 
 import brooklyn.entity.Entity;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
+import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
+import brooklyn.event.basic.Sensors;
 import brooklyn.util.collections.MutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +77,44 @@ public class ClearDbServiceImpl extends CloudFoundryServiceImpl implements Clear
     @Override
     public void operation(CloudFoundryWebAppImpl app) {
         getDriver().operation(app);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void setBindingCredentialsFromApp(CloudFoundryWebAppImpl webapp) {
+
+        String webappName = webapp.getConfig(CloudFoundryWebApp.APPLICATION_NAME);
+        Map<String, String> credentials = getServiceCredentialsFromApp(webapp);
+
+        setAttribute(Sensors.newStringSensor(
+                        createACredentialSensorName(webappName, "jdbcUrl"),
+                        "JDBC URL to access the database (from app " + webappName + ")"),
+                credentials.get("jdbcUrl"));
+
+        setAttribute(Sensors.newStringSensor(
+                        createACredentialSensorName(webappName, "name"),
+                        "name of the database created for app " + webappName ),
+                credentials.get("name"));
+
+        setAttribute(Sensors.newStringSensor(
+                        createACredentialSensorName(webappName, "hostname"),
+                        "hostname of the database created for app " + webappName ),
+                credentials.get("hostname"));
+
+        setAttribute(Sensors.newStringSensor(
+                        createACredentialSensorName(webappName, "port"),
+                        "HTTP port to access the database created for app " + webappName ),
+                credentials.get("port"));
+
+        setAttribute(Sensors.newStringSensor(
+                        createACredentialSensorName(webappName, "username"),
+                        "username for the database created for app " + webappName ),
+                credentials.get("username"));
+
+        setAttribute(Sensors.newStringSensor(
+                        createACredentialSensorName(webappName, "password"),
+                        "password for the database created for app " + webappName ),
+                credentials.get("password"));
     }
 
 

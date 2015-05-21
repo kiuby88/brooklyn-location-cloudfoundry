@@ -202,6 +202,7 @@ public abstract class CloudFoundryEntityImpl extends AbstractEntity implements C
             ServiceStateLogic.setExpectedState(this, Lifecycle.RUNNING);
         } catch (Throwable t) {
             ServiceStateLogic.setExpectedState(this, Lifecycle.ON_FIRE);
+            log.error("Error error starting entity {}", this);
             throw Exceptions.propagate(t);
         }
     }

@@ -19,16 +19,12 @@
 package brooklyn.entity.cloudfoundry.services.sql.cleardb;
 
 
-import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;
 import brooklyn.entity.cloudfoundry.services.PaasServiceCloudFoundryDriver;
-import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import brooklyn.util.ResourceUtils;
 import brooklyn.util.text.Strings;
-import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,11 +52,11 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
     @Override
     public void operation(CloudFoundryWebAppImpl app) {
         if(!Strings.isBlank(getEntity().getCreationScriptUrl())){
-            creationScriptOperation(app);
+            executeCreationScript(app);
         }
     }
 
-    public void creationScriptOperation(CloudFoundryWebAppImpl app) {
+    public void executeCreationScript(CloudFoundryWebAppImpl app) {
         Connection con;
         Statement stmt;
         String DRIVER = "com.mysql.jdbc.Driver";
@@ -84,24 +80,8 @@ public class ClearDbServiceCloudFoundryDriver extends PaasServiceCloudFoundryDri
     }
 
     private String createJDBCStringConnection(CloudFoundryWebAppImpl app){
-        return generateJDBCFromCredentials(getServiceCredentials(app));
-    }
-
-    @SuppressWarnings("unchecked")
-    public Map<String, String> getServiceCredentials(CloudFoundryWebAppImpl app){
-
-
-        JSONArray pathResult= JsonPath.read(app.getAttribute(CloudFoundryWebApp.VCAP_SERVICES),
-                "$." + getEntity().getServiceTypeId() +
-                        "[?(@.name =~/.*" +
-                        getEntity().getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME) +
-                        "/i)].credentials");
-        if((pathResult!=null)&&(pathResult.size()==1)){
-            return ((Map<String, String>) pathResult.get(0));
-        } else {
-            throw new RuntimeException("Error finding a service credentials in driver" + this +
-                    " deploying service "+getEntity().getId());
-        }
+        Map<String, String > credentials = getEntity().getServiceCredentialsFromApp(app);
+        return generateJDBCFromCredentials(credentials);
     }
 
     private String generateJDBCFromCredentials(Map<String, String> credentials){

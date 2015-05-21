@@ -44,7 +44,8 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     private String applicationPath;
     private String applicationName;
 
-    public PaasWebAppCloudFoundryDriver(CloudFoundryWebAppImpl entity, CloudFoundryPaasLocation location) {
+    public PaasWebAppCloudFoundryDriver(CloudFoundryWebAppImpl entity,
+                                        CloudFoundryPaasLocation location) {
         super(entity, location);
     }
 
@@ -126,15 +127,21 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         
             String serviceName = cloudFoundryService
                     .getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME);
+
             if (Strings.isEmpty(serviceName)){
-                log.error("Trying to get service instance name from {}, but getting null", cloudFoundryService);
+                log.error("Trying to get service instance name from {}, but getting null",
+                        cloudFoundryService);
             }
             bindingServiceToEntity(serviceName);
+
+            //TODO move to configureBoundService
             setCredentialsOnService(cloudFoundryService);
+
             configureBoundService(serviceName);
-            
+
+            //TODO move to configureBoundService
             cloudFoundryService.operation(getEntity());
-            
+
             
         } else {
             log.error("The service entity {} is not available from the application {}",
@@ -148,28 +155,34 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
 
     private void bindingServiceToEntity(String serviceId) {
         getClient().bindService(applicationName, serviceId);
-        log.info("The service {} was bound correctly to the application {}", new Object[]{serviceId,
-                applicationName});
+        log.info("The service {} was bound correctly to the application {}",
+                new Object[]{serviceId, applicationName});
+
+        updateVariableEnvironmentSensors();
+    }
+
+    private void updateVariableEnvironmentSensors(){
         Map<String, Object> env = getClient().getApplicationEnvironment(applicationName);
         JsonObject envTree = new Gson().toJsonTree(env).getAsJsonObject();
         getEntity().setAttribute(CloudFoundryWebApp.VCAP_SERVICES,
-                envTree.getAsJsonObject("system_env_json").getAsJsonObject("VCAP_SERVICES").toString());
+                envTree.getAsJsonObject("system_env_json")
+                        .getAsJsonObject("VCAP_SERVICES").toString());
     }
 
     protected void setCredentialsOnService(CloudFoundryService service) {
         service.setBindingCredentialsFromApp(getEntity());
     }
     
-    //TODO this method could be renamed.
     protected void configureBoundService(String serviceId){
-        if(serviceIsBound(serviceId)){
-            recordBoundServiceToEntity(serviceId);
+        if(serviceIsBoundToCloudApplication(serviceId)){
+            updateBoundServiceToEntity(serviceId);
             //TODO configuration of the service, for example create the tables of a database
         }
     }
 
-    protected void recordBoundServiceToEntity(String serviceId){
-        if(serviceIsBound(serviceId)){
+    //TODO it ma be renamed to updateBoundServicesSensor
+    protected void updateBoundServiceToEntity(String serviceId){
+        if(serviceIsBoundToCloudApplication(serviceId)){
             List<String> currentBoundServices = getEntity()
                     .getAttribute(CloudFoundryWebApp.BOUND_SERVICES);
             currentBoundServices.add(serviceId);
@@ -178,11 +191,12 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     }
 
     /**
-     * Return if a service is bound to the application.
+     * Return if a service is bound to the cloud application. Checks the running application in
+     * the cloud.
      * @param serviceId
      * @return
      */
-    public boolean serviceIsBound(String serviceId){
+    public boolean serviceIsBoundToCloudApplication(String serviceId){
         return getClient().getApplication(applicationName)
                 .getServices().contains(serviceId);
     }
@@ -232,7 +246,7 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     @SuppressWarnings("unchecked")
     public void setEnv(String key, String value) {
         CloudApplication app = getClient().getApplication(applicationName);
-        
+
         // app.setEnv() replaces the entire set of variables, so we need to add it externally.
         Map envAsMap = app.getEnvAsMap(); 
         envAsMap.put(key, value);
@@ -241,8 +255,9 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     }
     
     @SuppressWarnings("unchecked")
-    public void setEnv(Map<String, String> envs) {
+    void setEnv(Map<String, String> envs) {
         CloudApplication app = getClient().getApplication(applicationName);
+
         // app.setEnv() replaces the entire set of variables, so we need to add it externally.
         Map oldEnv = app.getEnvAsMap();
         oldEnv.putAll(envs);

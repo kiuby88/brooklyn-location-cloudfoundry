@@ -21,7 +21,6 @@ package brooklyn.entity.cloudfoundry.services;
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntity;
-import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebAppImpl;
 import brooklyn.entity.proxying.ImplementedBy;
 import brooklyn.event.AttributeSensor;
@@ -62,6 +61,9 @@ public interface CloudFoundryService extends CloudFoundryEntity {
      */
     public void operation(CloudFoundryWebAppImpl app);
 
-    
-    public void setBindingCredentialsFromApp(CloudFoundryWebApp webapp);
+    /**
+     * Adds a set of sensors that provides the credentials for the argument application.
+     * @param webapp the application that contains the credentials for this service.
+     */
+    public void setBindingCredentialsFromApp(CloudFoundryWebAppImpl webapp);
 }
