@@ -22,6 +22,8 @@ import brooklyn.entity.Application;
 import brooklyn.entity.Entity;
 import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
+import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
+import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbServiceImpl;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
@@ -29,30 +31,42 @@ import brooklyn.entity.trait.Startable;
 import brooklyn.event.AttributeSensor;
 import brooklyn.launcher.camp.SimpleYamlLauncher;
 
+import brooklyn.management.ManagementContext;
 import brooklyn.test.Asserts;
+import brooklyn.util.text.Strings;
 import org.testng.annotations.Test;
+import sun.management.Sensor;
+
+import java.util.Map;
 
 import static org.testng.Assert.*;
 
-public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTest {
+public class CloudFoundryYamlTest {
 
-
-    private final String SERVICE_NAME = APPLICATION_SERVICE_NAME+"-mysql";
+    private final String SERVICE_NAME = "test-brooklyn-service-mysql-from-yaml";
     private final String SERVICE_TYPE_ID = "cleardb";
     private final String SERVICE_PLAN = "spark";
+
+    private final String JDBC_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.jdbcUrl";
+    private final String NAME_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.name";
+    private final String HOSTNAME_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.hostname";
+    private final String USERNAME_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.username";
+    private final String PASSWORD_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.password";
+    private final String PORT_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.port";
+
 
     @Test( groups={"Live"} )
     public void deployWebappWithServicesFromYaml(){
         SimpleYamlLauncher launcher = new SimpleYamlLauncher();
-        launcher.setShutdownAppsOnExit(false);
-        Application app = launcher.launchAppYaml("cf-webapp-db.yaml");
-
+        launcher.setShutdownAppsOnExit(true);
+        Application app = launcher.launchAppYaml("cf-webapp-db.yaml").getApplication();
 
         final CloudFoundryService service = (CloudFoundryService)
                 findEntityChildByDisplayName(app, "DB HelloWorld Visitors");
 
         final CloudFoundryWebApp server = (CloudFoundryWebApp)
                 findEntityChildByDisplayName(app, "AppServer HelloWorld");
+
 
         Asserts.succeedsEventually(new Runnable() {
             public void run() {
@@ -61,13 +75,6 @@ public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTe
                 assertNotNull(service);
 
                 assertEquals(server.getAttribute(CloudFoundryWebApp.BOUND_SERVICES).size(), 1);
-
-                assertEquals(service.getAttribute(CloudFoundryService.SERVICE_TYPE_ID),
-                        SERVICE_TYPE_ID);
-                assertEquals(service.getConfig(CloudFoundryService.PLAN), SERVICE_PLAN);
-                assertEquals(service.getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME),
-                        SERVICE_NAME);
-
                 assertTrue(server.getAttribute(Startable.SERVICE_UP));
                 assertTrue(server.getAttribute(JavaCloudFoundryPaasWebApp
                         .SERVICE_PROCESS_IS_RUNNING));
@@ -83,19 +90,30 @@ public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTe
                         PaasHardwareResources.REQUIRED_MEMORY.getDefaultValue());
 
                 assertNotNull(server.getAttribute(CloudFoundryWebApp.VCAP_SERVICES));
-                assertNotEquals(server.getAttribute(CloudFoundryWebApp.VCAP_SERVICES), "");
+                assertFalse(Strings.isBlank(server.getAttribute(CloudFoundryWebApp.VCAP_SERVICES)));
 
+                //service
+                assertTrue(service.getAttribute(Startable.SERVICE_UP));
+                assertTrue(service.getAttribute(JavaCloudFoundryPaasWebApp
+                        .SERVICE_PROCESS_IS_RUNNING));
 
-                //TODO
-                //check server.getAttribute(CloudFoundryWebApp.ENV)
-                //check servicegetAttribute(Dinamic Sensors)
+                assertEquals(service.getAttribute(CloudFoundryService.SERVICE_TYPE_ID),
+                        SERVICE_TYPE_ID);
+                assertEquals(service.getConfig(CloudFoundryService.PLAN), SERVICE_PLAN);
+                assertEquals(service.getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME),
+                        SERVICE_NAME);
+
+                //dynamicSensors for credentials
+                assertFalse(Strings.isBlank((String)findSensorValueByName(service, JDBC_SENSOR)));
+                assertFalse(Strings.isBlank((String)findSensorValueByName(service, NAME_SENSOR)));
+                assertFalse(Strings.isBlank((String)findSensorValueByName(service, HOSTNAME_SENSOR)));
+                assertFalse(Strings.isBlank((String)findSensorValueByName(service, USERNAME_SENSOR)));
+                assertFalse(Strings.isBlank((String)findSensorValueByName(service, PASSWORD_SENSOR)));
+                assertFalse(Strings.isBlank((String)findSensorValueByName(service, PORT_SENSOR)));
+
             }
         });
-
-
-
     }
-
 
     private Entity findEntityChildByDisplayName(Application app, String displayName){
         for(Object entity: app.getChildren().toArray())
@@ -103,6 +121,16 @@ public class CloudFoundryYamlTest extends AbstractCloudFoundryPaasLocationLiveTe
                 return (Entity)entity;
             }
         return null;
+    }
+
+    private Object findSensorValueByName(Entity entity, String sensorName){
+        AttributeSensor<Object> sensor = findSensorByName(entity, sensorName);
+        return entity.getAttribute(sensor);
+    }
+
+    @SuppressWarnings("unchecked")
+    private AttributeSensor<Object> findSensorByName(Entity entity, String sensorName){
+        return (AttributeSensor<Object>) entity.getEntityType().getSensor(sensorName);
     }
 
 

@@ -104,10 +104,6 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         configureEnv();
     }
 
-    protected void configureEnv() {
-        setEnv(getEntity().getConfig(CloudFoundryWebApp.ENV));
-    }
-
     private void bindServices() {
         List<Entity> config = getEntity().getConfig(CloudFoundryWebApp.NAMED_SERVICES);
         if (config != null) {
@@ -253,7 +249,12 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         app.setEnv(envAsMap);
         getClient().updateApplicationEnv(applicationName, envAsMap);
     }
-    
+
+    protected void configureEnv() {
+        //TODO a sensor with the custom-environment variables?
+        setEnv(getEntity().getConfig(CloudFoundryWebApp.ENV));
+    }
+
     @SuppressWarnings("unchecked")
     void setEnv(Map<String, String> envs) {
         CloudApplication app = getClient().getApplication(applicationName);

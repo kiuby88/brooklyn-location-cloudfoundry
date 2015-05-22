@@ -76,10 +76,10 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity{
             Sensors.newStringSensor("webapp.url", "URL of the application");
 
     public static final AttributeSensor<String> VCAP_SERVICES = 
-            Sensors.newStringSensor( "vcap.services", 
+            Sensors.newStringSensor( "webapp.vcap.services",
                     "JSON information related to services bound to the application, " +
                     "such as credentials, endpoint information, selected plan, etc.");
-    
+
     /**
      * @return URL of the CloudFoundry Buildpack needed for building the application
      */
