@@ -47,9 +47,9 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity{
             "cloudFoundryWebApp.application.name", "Name of the application"
     , "cf-app-" + Identifiers.makeRandomId(8));
 
-    @SetFromFlag("application-path")
-    ConfigKey<String> APPLICATION_PATH = ConfigKeys.newStringConfigKey(
-            "cloudFoundryWebApp.application.path", "URI of the application");
+    @SetFromFlag("application-url")
+    ConfigKey<String> APPLICATION_URL = ConfigKeys.newStringConfigKey(
+            "cloudFoundryWebApp.application.url", "URI of the application");
 
     @SuppressWarnings("unchecked")
     @SetFromFlag("bind")

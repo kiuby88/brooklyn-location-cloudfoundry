@@ -21,7 +21,13 @@ package brooklyn.entity.cloudfoundry;
 
 import brooklyn.enricher.basic.AbstractEnricher;
 import brooklyn.entity.Entity;
-import brooklyn.entity.basic.*;
+import brooklyn.entity.basic.AbstractEntity;
+import brooklyn.entity.basic.Attributes;
+import brooklyn.entity.basic.BrooklynConfigKeys;
+import brooklyn.entity.basic.Entities;
+import brooklyn.entity.basic.EntityLocal;
+import brooklyn.entity.basic.Lifecycle;
+import brooklyn.entity.basic.ServiceStateLogic;
 import brooklyn.entity.drivers.DriverDependentEntity;
 import brooklyn.entity.drivers.EntityDriverManager;
 import brooklyn.event.SensorEvent;

@@ -22,22 +22,15 @@ import brooklyn.entity.Application;
 import brooklyn.entity.Entity;
 import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
-import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
-import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbServiceImpl;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.trait.Startable;
 import brooklyn.event.AttributeSensor;
 import brooklyn.launcher.camp.SimpleYamlLauncher;
-
-import brooklyn.management.ManagementContext;
 import brooklyn.test.Asserts;
 import brooklyn.util.text.Strings;
 import org.testng.annotations.Test;
-import sun.management.Sensor;
-
-import java.util.Map;
 
 import static org.testng.Assert.*;
 
@@ -104,12 +97,12 @@ public class CloudFoundryYamlTest {
                         SERVICE_NAME);
 
                 //dynamicSensors for credentials
-                assertFalse(Strings.isBlank((String)findSensorValueByName(service, JDBC_SENSOR)));
-                assertFalse(Strings.isBlank((String)findSensorValueByName(service, NAME_SENSOR)));
-                assertFalse(Strings.isBlank((String)findSensorValueByName(service, HOSTNAME_SENSOR)));
-                assertFalse(Strings.isBlank((String)findSensorValueByName(service, USERNAME_SENSOR)));
-                assertFalse(Strings.isBlank((String)findSensorValueByName(service, PASSWORD_SENSOR)));
-                assertFalse(Strings.isBlank((String)findSensorValueByName(service, PORT_SENSOR)));
+                assertFalse(Strings.isBlank((String) findSensorValueByName(service, JDBC_SENSOR)));
+                assertFalse(Strings.isBlank((String) findSensorValueByName(service, NAME_SENSOR)));
+                assertFalse(Strings.isBlank((String) findSensorValueByName(service, HOSTNAME_SENSOR)));
+                assertFalse(Strings.isBlank((String) findSensorValueByName(service, USERNAME_SENSOR)));
+                assertFalse(Strings.isBlank((String) findSensorValueByName(service, PASSWORD_SENSOR)));
+                assertFalse(Strings.isBlank((String) findSensorValueByName(service, PORT_SENSOR)));
 
             }
         });

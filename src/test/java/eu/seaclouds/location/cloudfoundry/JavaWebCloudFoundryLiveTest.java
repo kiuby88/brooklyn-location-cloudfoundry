@@ -40,7 +40,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
     private final String APPLICATION_ARTIFACT_NAME = "brooklyn-example-hello-world-webapp.war";
 
 
-    private final String APPLICATION_ARTIFACT_PATH =
+    private final String APPLICATION_ARTIFACT_URL =
             getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
 
 
@@ -56,7 +56,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_ARTIFACT_PATH)
+                        .configure("application-url", APPLICATION_ARTIFACT_URL)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));
@@ -85,7 +85,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", "stopped" + APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_ARTIFACT_PATH)
+                        .configure("application-path", APPLICATION_ARTIFACT_URL)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));
@@ -107,7 +107,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", "wrong-" + APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_ARTIFACT_PATH + "wrong")
+                        .configure("application-path", APPLICATION_ARTIFACT_URL + "wrong")
                         .location(cloudFoundryPaasLocation));
 
         Asserts.succeedsEventually(new Runnable() {

@@ -41,7 +41,7 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
 
     public static final Logger log = LoggerFactory.getLogger(PaasWebAppCloudFoundryDriver.class);
 
-    private String applicationPath;
+    private String applicationUrl;
     private String applicationName;
 
     public PaasWebAppCloudFoundryDriver(CloudFoundryWebAppImpl entity,
@@ -58,7 +58,7 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     @SuppressWarnings("unchecked")
     private void initApplicationParameters() {
         applicationName = getEntity().getConfig(CloudFoundryWebApp.APPLICATION_NAME);
-        applicationPath = getEntity().getConfig(CloudFoundryWebApp.APPLICATION_PATH);
+        applicationUrl = getEntity().getConfig(CloudFoundryWebApp.APPLICATION_URL);
     }
 
     @Override
@@ -66,8 +66,8 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         return (CloudFoundryWebAppImpl) super.getEntity();
     }
 
-    protected String getApplicationPath(){
-        return applicationPath;
+    protected String getApplicationUrl(){
+        return applicationUrl;
     }
 
     protected String getApplicationName(){
@@ -99,46 +99,41 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     public abstract void deploy();
 
     public void preLaunch() {
-        bindServices();
+        manageServices();
         
         configureEnv();
     }
 
-    private void bindServices() {
+    private void manageServices() {
         List<Entity> config = getEntity().getConfig(CloudFoundryWebApp.NAMED_SERVICES);
         if (config != null) {
             for (Entity serviceEntityId : config) {
-                bindService(serviceEntityId);
+                manageService(serviceEntityId);
             }
         }
     }
 
     /*TODO RENAME Method. It could be represent that the service is bound and the service
      operation is called*/
-    private void bindService(Entity rawEntity){
+    private void manageService(Entity rawEntity){
 
         CloudFoundryService cloudFoundryService;
         if (rawEntity instanceof CloudFoundryService){
+
             cloudFoundryService = (CloudFoundryService) rawEntity;
         
             String serviceName = cloudFoundryService
                     .getConfig(CloudFoundryService.SERVICE_INSTANCE_NAME);
 
-            if (Strings.isEmpty(serviceName)){
+
+            if (!Strings.isEmpty(serviceName)){
+                bindingServiceToEntity(serviceName);
+                setCredentialsOnService(cloudFoundryService);
+                cloudFoundryService.operation(getEntity());
+            } else {
                 log.error("Trying to get service instance name from {}, but getting null",
                         cloudFoundryService);
             }
-            bindingServiceToEntity(serviceName);
-
-            //TODO move to configureBoundService
-            setCredentialsOnService(cloudFoundryService);
-
-            configureBoundService(serviceName);
-
-            //TODO move to configureBoundService
-            cloudFoundryService.operation(getEntity());
-
-            
         } else {
             log.error("The service entity {} is not available from the application {}",
                     new Object[]{rawEntity, getEntity()});
@@ -155,6 +150,7 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
                 new Object[]{serviceId, applicationName});
 
         updateVariableEnvironmentSensors();
+        updateBoundServiceSensor(serviceId);
     }
 
     private void updateVariableEnvironmentSensors(){
@@ -168,16 +164,9 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     protected void setCredentialsOnService(CloudFoundryService service) {
         service.setBindingCredentialsFromApp(getEntity());
     }
-    
-    protected void configureBoundService(String serviceId){
-        if(serviceIsBoundToCloudApplication(serviceId)){
-            updateBoundServiceToEntity(serviceId);
-            //TODO configuration of the service, for example create the tables of a database
-        }
-    }
 
     //TODO it ma be renamed to updateBoundServicesSensor
-    protected void updateBoundServiceToEntity(String serviceId){
+    protected void updateBoundServiceSensor(String serviceId){
         if(serviceIsBoundToCloudApplication(serviceId)){
             List<String> currentBoundServices = getEntity()
                     .getAttribute(CloudFoundryWebApp.BOUND_SERVICES);

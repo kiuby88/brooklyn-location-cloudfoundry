@@ -45,8 +45,8 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
     private final String SQL_ARTIFACT_NAME = "chat-database.sql";
     private final String APPLICATION_ARTIFACT_NAME = "brooklyn-example-hello-world-webapp.war";
 
-    private final String SQL_ARTIFACT_PATH =getClasspathUrlForResource(SQL_ARTIFACT_NAME);
-    private final String APPLICATION_ARTIFACT_PATH =
+    private final String SQL_ARTIFACT_URL =getClasspathUrlForResource(SQL_ARTIFACT_NAME);
+    private final String APPLICATION_ARTIFACT_URL =
             getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
 
     private final String SERVICE_NAME = APPLICATION_SERVICE_NAME+"-mysql";
@@ -67,14 +67,14 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
                 .createAndManageChild(EntitySpec.create(ClearDbService.class)
                         .configure("serviceInstanceName", SERVICE_NAME)
                         .configure("plan", SERVICE_PLAN)
-                        .configure("creationScriptUrl", SQL_ARTIFACT_PATH)
+                        .configure("creationScriptUrl", SQL_ARTIFACT_URL)
                         .location(cloudFoundryPaasLocation));
 
         servicesToBind.add(service);
         final JavaCloudFoundryPaasWebApp server = app
                 .createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", APPLICATION_NAME + "-withServices")
-                        .configure("application-path", APPLICATION_ARTIFACT_PATH)
+                        .configure("application-path", APPLICATION_ARTIFACT_URL)
                         .configure("bind", servicesToBind)
                         .location(cloudFoundryPaasLocation));
 
@@ -118,7 +118,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
                     .createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                             .configure("application-name",
                                     APPLICATION_NAME + "-withNotAvailableService")
-                            .configure("application-path", APPLICATION_ARTIFACT_PATH)
+                            .configure("application-url", APPLICATION_ARTIFACT_URL)
                             .configure("bind", servicesToBind)
                             .location(cloudFoundryPaasLocation));
             app.start(ImmutableList.of(cloudFoundryPaasLocation));

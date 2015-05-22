@@ -34,7 +34,7 @@ public class LocalResourcesDownloader {
     private static final String BROOKLYN_DIR="brooklyn";
 
     public static File downloadResourceInLocalDir(String url) {
-        File localResource = createLocalFilePathNameForUrl(url,
+        File localResource = createLocalFilePathName(
                 findArchiveNameFromUrl(url));
         LocalResourcesDownloader.downloadResource(url, localResource);
         return localResource;
@@ -52,11 +52,11 @@ public class LocalResourcesDownloader {
                 Strings.makeRandomId(8);
     }
 
-    public static File createLocalFilePathNameForUrl(String url, String fileName){
-        return new File(createLocalPathNameForUrl(url, fileName));
+    public static File createLocalFilePathName(String fileName){
+        return new File(createLocalPathName(fileName));
     }
 
-    public static String createLocalPathNameForUrl(String url, String fileName){
+    public static String createLocalPathName(String fileName){
         String targetDirName = LocalResourcesDownloader.findATmpDir();
         String filePathName = targetDirName + File.separator + fileName;
 

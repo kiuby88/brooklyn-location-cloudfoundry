@@ -6,7 +6,7 @@ services:
   location: cloudfoundry-instance
   brooklyn.config:
     application-name: test-brooklyn-service-mysql-from-yaml
-    application-path: classpath://brooklyn-webapp-custom-env.war
+    application-url: classpath://brooklyn-webapp-custom-env.war
     bind: 
     - $brooklyn:component("db")
     env: 

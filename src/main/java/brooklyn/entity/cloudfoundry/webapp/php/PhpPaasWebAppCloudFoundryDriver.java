@@ -61,7 +61,7 @@ public class PhpPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDrive
             staging = new Staging(null, getBuildpack());
             uris.add(inferApplicationDomainUri(getApplicationName()));
             //fixme a URI in necessary
-            applicationDirectory = new File(getApplicationPath());
+            applicationDirectory = new File(getApplicationUrl());
 
             getClient().createApplication(getApplicationName(), staging, DEFAULT_MEMORY, uris, serviceNames);
             getClient().uploadApplication(getApplicationName(), applicationDirectory.getCanonicalPath());

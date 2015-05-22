@@ -37,7 +37,7 @@ import static org.testng.Assert.*;
 
 public class PhpWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
-    private final String APPLICATION_PATH = checkNotNull(getClass().getClassLoader()
+    private final String APPLICATION_URL = checkNotNull(getClass().getClassLoader()
             .getResource("phpHelloWorld")).getFile();
 
     @AfterMethod(alwaysRun = true)
@@ -50,7 +50,7 @@ public class PhpWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocation
         final PhpCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(PhpCloudFoundryPaasWebApp.class)
                         .configure("application-name", APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_PATH)
+                        .configure("application-url", APPLICATION_URL)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));
@@ -79,7 +79,7 @@ public class PhpWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocation
         final PhpCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(PhpCloudFoundryPaasWebApp.class)
                         .configure("application-name", "stopped"+APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_PATH)
+                        .configure("application-url", APPLICATION_URL)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));
@@ -101,7 +101,7 @@ public class PhpWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocation
         final PhpCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(PhpCloudFoundryPaasWebApp.class)
                         .configure("application-name", "wrong-"+APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_PATH + "wrong")
+                        .configure("application-path", APPLICATION_URL + "wrong")
                         .location(cloudFoundryPaasLocation));
 
         Asserts.succeedsEventually(new Runnable() {

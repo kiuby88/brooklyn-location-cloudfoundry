@@ -62,7 +62,7 @@ public class JavaPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDriv
             uris.add(inferApplicationDomainUri(getApplicationName()));
 
             war=LocalResourcesDownloader
-                    .downloadResourceInLocalDir(getApplicationPath());
+                    .downloadResourceInLocalDir(getApplicationUrl());
 
             getClient().createApplication(getApplicationName(), staging,
                     getEntity().getConfig(CloudFoundryWebApp.REQUIRED_MEMORY),
