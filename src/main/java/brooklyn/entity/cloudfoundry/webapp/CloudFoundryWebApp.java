@@ -90,5 +90,17 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity{
     @Effector(description="Set an environment variable that can be retrieved by the web application")
     public void setEnv(@EffectorParam(name="name", description="Name of the variable") String key, 
                        @EffectorParam(name="value", description="Value of the environment variable") String value);
-    
+
+    @Effector(description="Set the instances number that will be user by the web application")
+    public void setInstancesNumber(@EffectorParam(name = "instancesNumber", description = "Number of " +
+            "instance that are being used by the application") int instancesNumber);
+
+    @Effector(description="Set the disk quota that will be used by the web application")
+    public void setDiskQuota(@EffectorParam(name = "diskQuota", description = "Disk amount" +
+            " that will be used by the web application") int diskQuota);
+
+    @Effector(description="Set an Ram Memory limit for the web application")
+    public void setAmountMemory(@EffectorParam(name = "memory", description = "Disk amount" +
+            " that will be used by the web application") int memory);
+
 }

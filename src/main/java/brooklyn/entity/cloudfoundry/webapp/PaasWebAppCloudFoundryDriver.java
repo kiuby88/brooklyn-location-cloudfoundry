@@ -253,4 +253,22 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         oldEnv.putAll(envs);
         getClient().updateApplicationEnv(applicationName, oldEnv);
     }
+
+    @Override
+    public void changeInstancesNumber(int instancesNumber){
+        getClient().updateApplicationInstances(
+                getApplicationName(), instancesNumber);
+    }
+
+    @Override
+    public void updateApplicationDiskQuota(int diskQuota){
+        getClient().updateApplicationDiskQuota(getApplicationName(), diskQuota);
+    }
+
+    @Override
+    public void updateApplicationMemory(int memory){
+        getClient().updateApplicationMemory(getApplicationName(), memory);
+    }
+
+
 }

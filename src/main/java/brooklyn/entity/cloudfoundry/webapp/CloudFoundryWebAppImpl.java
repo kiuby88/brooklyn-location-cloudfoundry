@@ -81,4 +81,44 @@ public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
         }
     }
 
+    @Override
+    @SuppressWarnings("all")
+    @Effector(description="Set the instances number that will be user by the web application")
+    public void setInstancesNumber(@EffectorParam(name = "instancesNumber", description = "Number of " +
+            "instances that are being used by the application") int instancesNumber){
+        if(instancesNumber<=0){
+            log.info("The number of instances should be greater than 0 in effector " +
+                    "setInstancesNumbre of {} but was received {}", this, instancesNumber);
+        }
+        getDriver().changeInstancesNumber(instancesNumber);
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    @Effector(description="Set the disk quota that will be used by the web application")
+    public void setDiskQuota(@EffectorParam(name = "diskQuota", description = "Disk amount" +
+            " that will be used by the web application") int diskQuota){
+        if(diskQuota<=0){
+            log.info("The disk amount should be greater than 0 in effector " +
+                    "setInstancesNumbre of {} but was received {}", this, diskQuota);
+        }
+        getDriver().updateApplicationDiskQuota(diskQuota);
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    @Effector(description="Set an Ram Memory limit for the web application")
+    public void setAmountMemory(@EffectorParam(name = "memory", description = "Disk amount" +
+            " that will be used by the web application") int memory){
+        if(memory<=0){
+            log.info("The memory amount should be greater than 0 in effector " +
+                    "setInstancesNumbre of {} but was received {}", this, memory);
+        }
+        getDriver().updateApplicationMemory(memory);
+    }
+
+
+
+
+
 }

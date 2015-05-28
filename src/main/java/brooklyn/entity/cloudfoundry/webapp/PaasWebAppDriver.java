@@ -34,4 +34,23 @@ public interface PaasWebAppDriver extends PaasEntityDriver {
      * @param value
      */
     void setEnv(String key, String value);
+
+    /**
+     * Set the instances number that will be user by the web application
+     * @param instancesNumber Number of instance that are being used by the application
+     */
+    void changeInstancesNumber(int instancesNumber);
+
+    /**
+     * Set the disk quota that will be used by the web application
+     * @param diskQuota Disk amount that will be used by the web application
+     */
+    void updateApplicationDiskQuota(int diskQuota);
+
+    /**
+     * Set an Ram Memory limit for the web application
+     * @param memory Disk amount that will be used by the web application
+     */
+    void updateApplicationMemory(int memory);
+
 }
