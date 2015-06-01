@@ -85,7 +85,7 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
         final JavaCloudFoundryPaasWebApp server = app.
                 createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", "stopped" + APPLICATION_NAME)
-                        .configure("application-path", APPLICATION_ARTIFACT_URL)
+                        .configure("application-url", APPLICATION_ARTIFACT_URL)
                         .location(cloudFoundryPaasLocation));
 
         app.start(ImmutableList.of(cloudFoundryPaasLocation));

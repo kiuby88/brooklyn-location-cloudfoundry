@@ -45,7 +45,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
     private final String SQL_ARTIFACT_NAME = "chat-database.sql";
     private final String APPLICATION_ARTIFACT_NAME = "brooklyn-example-hello-world-webapp.war";
 
-    private final String SQL_ARTIFACT_URL =getClasspathUrlForResource(SQL_ARTIFACT_NAME);
+    private final String SQL_ARTIFACT_URL = getClasspathUrlForResource(SQL_ARTIFACT_NAME);
     private final String APPLICATION_ARTIFACT_URL =
             getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
 
@@ -74,7 +74,7 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
         final JavaCloudFoundryPaasWebApp server = app
                 .createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
                         .configure("application-name", APPLICATION_NAME + "-withServices")
-                        .configure("application-path", APPLICATION_ARTIFACT_URL)
+                        .configure("application-url", APPLICATION_ARTIFACT_URL)
                         .configure("bind", servicesToBind)
                         .location(cloudFoundryPaasLocation));
 
