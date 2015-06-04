@@ -53,7 +53,6 @@ public class JavaPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDriv
     @Override
     public void deploy() {
 
-
         List<String> uris = new ArrayList<String>();
         Staging staging;
         File war;
@@ -73,9 +72,6 @@ public class JavaPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDriv
                     new Object[]{getEntity(), this});
         }
     }
-
-
-
 
 }
 

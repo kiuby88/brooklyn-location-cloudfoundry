@@ -72,7 +72,7 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity, PaasHardwareReso
                     "List of user-defined environment variables",
                     ImmutableMap.<String, String>of());
     
-    AttributeSensor<String> ROOT_URL =
+    public static final AttributeSensor<String> ROOT_URL =
             Sensors.newStringSensor("webapp.url", "URL of the application");
 
     public static final AttributeSensor<String> VCAP_SERVICES = 
