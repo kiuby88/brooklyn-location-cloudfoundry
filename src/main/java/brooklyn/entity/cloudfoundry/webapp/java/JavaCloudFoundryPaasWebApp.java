@@ -22,17 +22,20 @@ import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.proxying.ImplementedBy;
+import brooklyn.entity.trait.Resizable;
+import brooklyn.event.AttributeSensor;
 import brooklyn.event.basic.MapConfigKey;
+import brooklyn.event.basic.Sensors;
 import brooklyn.util.flags.SetFromFlag;
 
 /**
  * Java webapp entity for being deployed in a CloudFoundry location.
  */
 @ImplementedBy(JavaCloudFoundryPaasWebAppImpl.class)
-public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp {
+public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp, Resizable {
 
     @SetFromFlag("buildpack")
-    ConfigKey<String> BUILDPACK= ConfigKeys.newStringConfigKey(
+    ConfigKey<String> BUILDPACK = ConfigKeys.newStringConfigKey(
             "cloudFoundryWebApp.application.buildpack", "URL of the required buildpack",
             "https://github.com/cloudfoundry/java-buildpack.git");
     
@@ -41,4 +44,10 @@ public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp {
     MapConfigKey<String> JAVA_SYSPROPS = new MapConfigKey<String>(String.class,
             "cloudfoundry.java.sysprops",
             "System properties to be passed to the buildpack");
+
+    public static final AttributeSensor<String> MONITOR_URL =
+            Sensors.newStringSensor("app.monitor.url", "URL for monitoring the app");
+
+    public static final AttributeSensor<Long> USED_MEMORY =
+            Sensors.newLongSensor("app.jm.usedmemory", "Memory used by Application");
 }
