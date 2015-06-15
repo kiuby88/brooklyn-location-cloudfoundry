@@ -32,11 +32,11 @@ public interface PaasHardwareResources {
 
     @SetFromFlag("profile.instances")
     ConfigKey<Integer> REQUIRED_MEMORY = ConfigKeys.newIntegerConfigKey(
-            "profile.memory", "Required instances to deploy the application (MB)", 512);
+            "profile.memory", "Required memory to deploy the application (MB)", 512);
 
     @SetFromFlag("profile.instances")
     ConfigKey<Integer> REQUIRED_DISK = ConfigKeys.newIntegerConfigKey(
-            "profile.disk", "Required instances to deploy the application (MB)", 1024);
+            "profile.disk", "Required disk to deploy the application (MB)", 1024);
 
 
     public static final AttributeSensor<Integer> INSTANCES_NUM =
@@ -44,7 +44,7 @@ public interface PaasHardwareResources {
                     "Instances which are used to run the application");
 
     public static final AttributeSensor<Integer> MEMORY =
-            Sensors.newIntegerSensor("app.running.ram", "Current ram assigned to the application MB");
+            Sensors.newIntegerSensor("app.running.ram", "Current RAM assigned to the application MB");
 
     public static final AttributeSensor<Integer> DISK =
             Sensors.newIntegerSensor("app.running.disk", "Assigned disk to the application (MB)");

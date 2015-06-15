@@ -84,6 +84,24 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
     }
 
     @Override
+    public  int getInstancesNumber(){
+        CloudApplication app = getClient().getApplication(getApplicationName());
+        return app.getInstances();
+    }
+
+    @Override
+    public  int getDisk(){
+        CloudApplication app = getClient().getApplication(getApplicationName());
+        return app.getDiskQuota();
+    }
+
+    @Override
+    public  int getMemory(){
+        CloudApplication app = getClient().getApplication(getApplicationName());
+        return app.getMemory();
+    }
+
+    @Override
     public void start() {
         super.start();
 
@@ -196,9 +214,9 @@ public abstract class PaasWebAppCloudFoundryDriver extends PaasEntityCloudFoundr
         getEntity().setAttribute(Attributes.MAIN_URI, URI.create(domainUri));
         getEntity().setAttribute(CloudFoundryWebApp.ROOT_URL, domainUri);
 
-        getEntity().setAttribute(CloudFoundryWebApp.INSTANCES_NUM,
-                application.getInstances());
-        application.getResources();
+        /*getEntity().setAttribute(CloudFoundryWebApp.INSTANCES_NUM,
+                application.getInstances());*/
+
         getEntity().setAttribute(CloudFoundryWebApp.MEMORY,
                 application.getMemory());
 

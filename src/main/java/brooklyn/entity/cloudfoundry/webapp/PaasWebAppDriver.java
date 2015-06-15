@@ -53,4 +53,21 @@ public interface PaasWebAppDriver extends PaasEntityDriver {
      */
     void updateApplicationMemory(int memory);
 
+    /**
+     * Return the number of instances that are used for an application.
+     * @return
+     */
+    int getInstancesNumber();
+
+    /**
+     * Return the current disk quota used by the application.
+     * @return
+     */
+    int getDisk();
+
+    /**
+     * Return the current assigned memory to the application.
+     * @return
+     */
+    int getMemory();
 }

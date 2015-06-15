@@ -23,17 +23,26 @@ import brooklyn.entity.Entity;
 import brooklyn.entity.annotation.Effector;
 import brooklyn.entity.annotation.EffectorParam;
 import brooklyn.entity.cloudfoundry.CloudFoundryEntityImpl;
+import brooklyn.event.feed.function.FunctionFeed;
+import brooklyn.event.feed.function.FunctionPollConfig;
 import brooklyn.util.collections.MutableMap;
+import brooklyn.util.time.Duration;
+import com.google.common.base.Functions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
         implements CloudFoundryWebApp {
 
     private static final Logger log = LoggerFactory.getLogger(CloudFoundryWebAppImpl.class);
+
+    private volatile FunctionFeed usedNumberOfInstances;
+    private volatile FunctionFeed usedDisk;
+    private volatile FunctionFeed usedMemory;
 
     public CloudFoundryWebAppImpl() {
         super(MutableMap.of(), null);
@@ -62,13 +71,136 @@ public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
     @Override
      public void init() {
         super.init();
-        initAtributesValues();
+        initAttributesValues();
     }
 
-    private void initAtributesValues(){
+    private void initAttributesValues(){
         setAttribute(BOUND_SERVICES, new LinkedList<String>());
     }
-    
+
+    @Override
+    protected void connectSensors() {
+        super.connectSensors();
+
+        connectInstancesNumberSensor();
+        connectDiskQuotaSensor();
+        connectMemorySensor();
+    }
+
+    @Override
+    protected void disconnectSensors(){
+        super.disconnectSensors();
+
+        disconnectInstancesNumberSensor();
+        disconnectDiskQuotaSensor();
+        disconnectMemorySensor();
+    }
+
+    /**
+     * For connecting the {@link #INSTANCES_NUM} sensor.
+     * <p>
+     * Should be called inside {@link #connectSensors()}.
+     *
+     * @see #disconnectInstancesNumberSensor()
+     */
+    protected void connectInstancesNumberSensor() {
+        usedNumberOfInstances = FunctionFeed.builder()
+                .entity(this)
+                .period(Duration.seconds(2))
+                .poll(new FunctionPollConfig<Integer, Integer>(INSTANCES_NUM)
+                        .onException(Functions.constant(0))
+                        .callable(new Callable<Integer>() {
+                            public Integer call() {
+                                return getDriver().getInstancesNumber();
+                            }
+                        }))
+                .build();
+    }
+
+    /**
+     * For disconnecting the {@link #INSTANCES_NUM} feed.
+     * <p>
+     * Should be called from {@link #disconnectSensors()}.
+     *
+     * @see #connectInstancesNumberSensor()
+     */
+    protected void disconnectInstancesNumberSensor() {
+        if (usedNumberOfInstances != null){
+            usedNumberOfInstances.stop();
+        }
+        setAttribute(INSTANCES_NUM, 0);
+    }
+
+    /**
+     * For connecting the {@link #DISK} sensor.
+     * <p>
+     * Should be called inside {@link #connectSensors()}.
+     *
+     * @see #disconnectDiskQuotaSensor()
+     */
+    protected void connectDiskQuotaSensor() {
+        usedDisk = FunctionFeed.builder()
+                .entity(this)
+                .period(Duration.seconds(2))
+                .poll(new FunctionPollConfig<Integer, Integer>(DISK)
+                        .onException(Functions.constant(0))
+                        .callable(new Callable<Integer>() {
+                            public Integer call() {
+                                return getDriver().getDisk();
+                            }
+                        }))
+                .build();
+    }
+
+    /**
+     * For disconnecting the {@link #DISK} feed.
+     * <p>
+     * Should be called from {@link #disconnectSensors()}.
+     *
+     * @see #connectDiskQuotaSensor()
+     */
+    protected void disconnectDiskQuotaSensor() {
+        if (usedDisk != null){
+            usedDisk.stop();
+        }
+        setAttribute(DISK, 0);
+    }
+
+    /**
+     * For connecting the {@link #MEMORY} sensor.
+     * <p>
+     * Should be called inside {@link #connectSensors()}.
+     *
+     * @see #disconnectMemorySensor()
+     */
+    protected void connectMemorySensor() {
+        usedMemory = FunctionFeed.builder()
+                .entity(this)
+                .period(Duration.seconds(2))
+                .poll(new FunctionPollConfig<Integer, Integer>(MEMORY)
+                        .onException(Functions.constant(0))
+                        .callable(new Callable<Integer>() {
+                            public Integer call() {
+                                return getDriver().getMemory();
+                            }
+                        }))
+                .build();
+    }
+
+    /**
+     * For disconnecting the {@link #MEMORY} feed.
+     * <p>
+     * Should be called from {@link #disconnectSensors()}.
+     *
+     * @see #connectMemorySensor()
+     */
+    protected void disconnectMemorySensor() {
+        if (usedMemory != null){
+            usedMemory.stop();
+        }
+        setAttribute(MEMORY, 0);
+    }
+
     @Override
     @Effector(description="Set an environment variable that can be retrieved by the web application")
     public void setEnv(@EffectorParam(name = "name", description = "Name of the variable") String key,
@@ -116,9 +248,6 @@ public abstract class CloudFoundryWebAppImpl extends CloudFoundryEntityImpl
         }
         getDriver().updateApplicationMemory(memory);
     }
-
-
-
 
 
 }

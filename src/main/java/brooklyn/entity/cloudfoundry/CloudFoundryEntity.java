@@ -34,7 +34,7 @@ import brooklyn.util.flags.SetFromFlag;
 import brooklyn.util.time.Duration;
 
 @ImplementedBy(CloudFoundryEntityImpl.class)
-public interface CloudFoundryEntity extends Entity, Startable, PaasHardwareResources {
+public interface CloudFoundryEntity extends Entity, Startable {
 
     @SetFromFlag("startTimeout")
     ConfigKey<Duration> START_TIMEOUT = BrooklynConfigKeys.START_TIMEOUT;

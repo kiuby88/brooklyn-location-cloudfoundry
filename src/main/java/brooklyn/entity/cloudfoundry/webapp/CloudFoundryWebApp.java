@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Generic web application to be deployed on a CloudFoundry location.
  */
-public interface CloudFoundryWebApp extends CloudFoundryEntity{
+public interface CloudFoundryWebApp extends CloudFoundryEntity, PaasHardwareResources{
 
     @SetFromFlag("application-name")
     ConfigKey<String> APPLICATION_NAME = ConfigKeys.newStringConfigKey(
