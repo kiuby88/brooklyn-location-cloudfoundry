@@ -37,7 +37,6 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-    <!-- Compilation -->
 
     <repositories>
         <repository>
@@ -70,8 +69,6 @@
         </repository>
     </repositories>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.apache.brooklyn</groupId>
@@ -89,9 +86,6 @@
             <groupId>org.apache.brooklyn</groupId>
             <artifactId>brooklyn-software-base</artifactId>
             <version>${brooklyn.version}</version>
-        </dependency>
-
-        <dependency>
         </dependency>
 
         <dependency>
@@ -211,5 +205,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

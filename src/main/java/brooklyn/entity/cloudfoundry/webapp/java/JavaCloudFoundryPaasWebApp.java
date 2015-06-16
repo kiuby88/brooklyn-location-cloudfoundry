@@ -45,9 +45,35 @@ public interface JavaCloudFoundryPaasWebApp extends CloudFoundryWebApp, Resizabl
             "cloudfoundry.java.sysprops",
             "System properties to be passed to the buildpack");
 
+    @SetFromFlag("jm.resource")
+    ConfigKey<String> MAIN_MONITOR_RESOURCE = ConfigKeys.newStringConfigKey(
+            "app.monitor.resource", "Main resource that will be used to monitor the app",
+            "/ GET");
+
     public static final AttributeSensor<String> MONITOR_URL =
             Sensors.newStringSensor("app.monitor.url", "URL for monitoring the app");
 
     public static final AttributeSensor<Long> USED_MEMORY =
             Sensors.newLongSensor("app.jm.usedmemory", "Memory used by Application");
+
+
+    public static final AttributeSensor<Double> DURATION_SUM =
+            Sensors.newDoubleSensor("app.jm.resource.durationsum", "Total time used by a resource");
+
+    public static final AttributeSensor<Double> RESOURCE_HITS =
+            Sensors.newDoubleSensor("app.jm.resource.hits", "Total time that a resource was used");
+
+    public static final AttributeSensor<Double> RESOURCE_LATENCY =
+            Sensors.newDoubleSensor("app.jm.resource.latency", "Latency");
+
+
+    public static final AttributeSensor<Double> SERVER_PROCESSING_TIME =
+            Sensors.newDoubleSensor("app.jm.server.processingtime", "");
+
+    public static final AttributeSensor<Double>  SERVER_REQUESTS=
+            Sensors.newDoubleSensor("app.jm.server.requests", "");
+
+    public static final AttributeSensor<Double> SERVER_LATENCY =
+            Sensors.newDoubleSensor("app.jm.server.latency", "Latency");
+
 }

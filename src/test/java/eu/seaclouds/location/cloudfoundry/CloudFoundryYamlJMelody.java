@@ -23,16 +23,19 @@ import brooklyn.entity.Entity;
 import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
-import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.trait.Startable;
 import brooklyn.event.AttributeSensor;
 import brooklyn.launcher.camp.SimpleYamlLauncher;
+import brooklyn.location.cloudfoundry.PaasHardwareResources;
 import brooklyn.test.Asserts;
 import brooklyn.util.text.Strings;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 
 public class CloudFoundryYamlJMelody {
@@ -60,7 +63,6 @@ public class CloudFoundryYamlJMelody {
 
         final CloudFoundryWebApp server = (CloudFoundryWebApp)
                 findEntityChildByDisplayName(app, "Web AppServer HelloWorld");
-
 
         Asserts.succeedsEventually(new Runnable() {
             public void run() {
@@ -104,8 +106,7 @@ public class CloudFoundryYamlJMelody {
                 assertFalse(Strings.isBlank((String) findSensorValueByName(service, USERNAME_SENSOR)));
                 assertFalse(Strings.isBlank((String) findSensorValueByName(service, PASSWORD_SENSOR)));
                 assertFalse(Strings.isBlank((String) findSensorValueByName(service, PORT_SENSOR)));
-                assertFalse(Strings.isBlank((String) findSensorValueByName(server, "app.memory")));
-
+                assertFalse(Strings.isBlank((String) findSensorValueByName(server, "app.jm.usedmemory")));
             }
         });
     }
