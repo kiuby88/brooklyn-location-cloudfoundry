@@ -30,8 +30,6 @@ import org.testng.annotations.BeforeMethod;
 
 import java.util.UUID;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 
 public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynAppLiveTestSupport {
 
