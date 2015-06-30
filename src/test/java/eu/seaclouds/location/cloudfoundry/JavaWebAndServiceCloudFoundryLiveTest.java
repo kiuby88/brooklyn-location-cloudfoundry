@@ -55,11 +55,6 @@ public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryP
     private final String SERVICE_TYPE_ID = "cleardb";
     private final String SERVICE_PLAN = "spark";
 
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() throws Exception {
-        if (app != null) Entities.destroyAllCatching(app.getManagementContext());
-    }
-
     @Test(groups = {"Live"})
     protected void deployAppWithServicesTest() throws Exception {
 

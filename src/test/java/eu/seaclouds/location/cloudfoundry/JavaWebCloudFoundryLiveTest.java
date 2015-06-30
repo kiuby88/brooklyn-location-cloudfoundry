@@ -19,7 +19,6 @@
 package eu.seaclouds.location.cloudfoundry;
 
 import brooklyn.entity.basic.Attributes;
-import brooklyn.entity.basic.Entities;
 import brooklyn.entity.basic.Lifecycle;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.proxying.EntitySpec;
@@ -28,7 +27,6 @@ import brooklyn.location.cloudfoundry.PaasHardwareResources;
 import brooklyn.test.Asserts;
 import brooklyn.util.exceptions.PropagatedRuntimeException;
 import com.google.common.collect.ImmutableList;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -45,10 +43,6 @@ public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocatio
     private final String APPLICATION_ARTIFACT_URL =
             getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
 
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() throws Exception {
-        if (app != null) Entities.destroyAllCatching(app.getManagementContext());
-    }
 
     @Test(groups = {"Live"})
     protected void deployApplicationTest() throws Exception {

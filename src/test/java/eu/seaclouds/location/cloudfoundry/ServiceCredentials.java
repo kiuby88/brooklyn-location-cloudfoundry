@@ -18,7 +18,6 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
-import brooklyn.entity.basic.Entities;
 import brooklyn.entity.cloudfoundry.generic.GenericService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.proxying.EntitySpec;
@@ -27,7 +26,6 @@ import com.google.common.collect.ImmutableList;
 import org.cloudfoundry.client.lib.domain.CloudServiceInstance;
 import org.cloudfoundry.client.lib.domain.CloudServiceOffering;
 import org.cloudfoundry.client.lib.domain.CloudServicePlan;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -79,11 +77,6 @@ public class ServiceCredentials extends AbstractCloudFoundryPaasLocationLiveTest
             }
         }
         return freePlan;
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() throws Exception {
-        if (app != null) Entities.destroyAllCatching(app.getManagementContext());
     }
 
     @Test(groups = {"Live"}, dataProvider = "serviceDescriptionProvider")

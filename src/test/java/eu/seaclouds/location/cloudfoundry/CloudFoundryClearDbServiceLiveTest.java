@@ -18,7 +18,6 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
-import brooklyn.entity.basic.Entities;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
@@ -26,18 +25,12 @@ import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
 import brooklyn.test.Asserts;
 import com.google.common.collect.ImmutableList;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class CloudFoundryClearDbServiceLiveTest extends AbstractCloudFoundryPaasLocationLiveTest  {
-
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() throws Exception {
-        if (app != null) Entities.destroyAllCatching(app.getManagementContext());
-    }
 
     @Test(groups = {"Live"})
     protected void instanceServiceTest() {

@@ -55,8 +55,13 @@ public abstract class AbstractCloudFoundryPaasLocationLiveTest extends BrooklynA
     }
 
     @AfterMethod(alwaysRun = true)
-    public void tearUp() throws Exception {
-        if (managementContext != null) Entities.destroyAll(managementContext);
+    public void tearDown() throws Exception {
+        if (app != null) {
+            Entities.destroyAllCatching(app.getManagementContext());
+        }
+        if (managementContext != null){
+            Entities.destroyAll(managementContext);
+        }
     }
 
     protected CloudFoundryPaasLocation newSampleCloudFoundryLocationForTesting(String spec) {
