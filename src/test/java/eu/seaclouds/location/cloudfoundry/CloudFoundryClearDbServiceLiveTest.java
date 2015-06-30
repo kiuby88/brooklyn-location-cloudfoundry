@@ -19,9 +19,9 @@
 package eu.seaclouds.location.cloudfoundry;
 
 import brooklyn.entity.basic.Entities;
-import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
+import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
 import brooklyn.test.Asserts;

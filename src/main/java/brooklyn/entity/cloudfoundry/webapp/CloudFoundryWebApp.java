@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Generic web application to be deployed on a CloudFoundry location.
  */
-public interface CloudFoundryWebApp extends CloudFoundryEntity, PaasHardwareResources{
+public interface CloudFoundryWebApp extends CloudFoundryEntity {
 
     @SetFromFlag("application-name")
     ConfigKey<String> APPLICATION_NAME = ConfigKeys.newStringConfigKey(
@@ -80,12 +80,24 @@ public interface CloudFoundryWebApp extends CloudFoundryEntity, PaasHardwareReso
                     "JSON information related to services bound to the application, " +
                     "such as credentials, endpoint information, selected plan, etc.");
 
+    public static final AttributeSensor<Integer> INSTANCES_NUM =
+            Sensors.newIntegerSensor("app.running.instances",
+                    "Instances which are used to run the application");
+
+    public static final AttributeSensor<Integer> MEMORY =
+            Sensors.newIntegerSensor("app.running.ram",
+                    "Current RAM assigned to the application MB");
+
+    public static final AttributeSensor<Integer> DISK =
+            Sensors.newIntegerSensor("app.running.disk", "Assigned disk to the application (MB)");
+
     /**
      * @return URL of the CloudFoundry Buildpack needed for building the application
      */
     public String getBuildpack();
 
-    public static final MethodEffector<Void> DEPLOY = new MethodEffector<Void>(CloudFoundryWebApp.class, "setEnv");
+    public static final MethodEffector<Void> DEPLOY =
+            new MethodEffector<Void>(CloudFoundryWebApp.class, "setEnv");
 
     @Effector(description="Set an environment variable that can be retrieved by the web application")
     public void setEnv(@EffectorParam(name="name", description="Name of the variable") String key, 

@@ -24,10 +24,10 @@ import brooklyn.entity.basic.Entities;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService;
 import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
-import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
+import brooklyn.location.cloudfoundry.PaasHardwareResources;
 import brooklyn.test.Asserts;
 import com.google.common.collect.ImmutableList;
 import org.testng.annotations.AfterMethod;
@@ -36,7 +36,9 @@ import org.testng.annotations.Test;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 
 public class JavaWebAndServiceCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {

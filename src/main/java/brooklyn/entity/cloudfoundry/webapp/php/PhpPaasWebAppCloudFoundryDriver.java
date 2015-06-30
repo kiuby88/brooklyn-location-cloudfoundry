@@ -34,9 +34,6 @@ public class PhpPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDrive
 
     public static final Logger log = LoggerFactory.getLogger(PhpPaasWebAppCloudFoundryDriver.class);
 
-    //Move to super class?
-    private static final int DEFAULT_MEMORY = 512; // MB
-
     public PhpPaasWebAppCloudFoundryDriver(PhpCloudFoundryPaasWebAppImpl entity, CloudFoundryPaasLocation location) {
         super(entity, location);
     }
@@ -63,7 +60,9 @@ public class PhpPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDrive
             //fixme a URI in necessary
             applicationDirectory = new File(getApplicationUrl());
 
-            getClient().createApplication(getApplicationName(), staging, DEFAULT_MEMORY, uris, serviceNames);
+            getClient().createApplication(getApplicationName(), staging,
+                    getLocation().getConfig(CloudFoundryPaasLocation.REQUIRED_MEMORY),
+                    uris, serviceNames);
             getClient().uploadApplication(getApplicationName(), applicationDirectory.getCanonicalPath());
 
         } catch (IOException e) {

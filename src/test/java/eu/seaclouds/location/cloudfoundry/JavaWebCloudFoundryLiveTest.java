@@ -21,30 +21,29 @@ package eu.seaclouds.location.cloudfoundry;
 import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.basic.Entities;
 import brooklyn.entity.basic.Lifecycle;
-import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
+import brooklyn.location.cloudfoundry.PaasHardwareResources;
 import brooklyn.test.Asserts;
 import brooklyn.util.exceptions.PropagatedRuntimeException;
 import com.google.common.collect.ImmutableList;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 
 public class JavaWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {
 
     private final String APPLICATION_ARTIFACT_NAME = "brooklyn-example-hello-world-webapp.war";
 
-
     private final String APPLICATION_ARTIFACT_URL =
             getClasspathUrlForResource(APPLICATION_ARTIFACT_NAME);
-
-
-
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() throws Exception {

@@ -19,7 +19,6 @@
 package brooklyn.entity.cloudfoundry.webapp.java;
 
 import brooklyn.entity.cloudfoundry.LocalResourcesDownloader;
-import brooklyn.entity.cloudfoundry.webapp.CloudFoundryWebApp;
 import brooklyn.entity.cloudfoundry.webapp.PaasWebAppCloudFoundryDriver;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import org.cloudfoundry.client.lib.domain.Staging;
@@ -52,8 +51,6 @@ public class JavaPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDriv
 
     @Override
     public void deploy() {
-
-
         List<String> uris = new ArrayList<String>();
         Staging staging;
         File war;
@@ -65,7 +62,7 @@ public class JavaPaasWebAppCloudFoundryDriver extends PaasWebAppCloudFoundryDriv
                     .downloadResourceInLocalDir(getApplicationUrl());
 
             getClient().createApplication(getApplicationName(), staging,
-                    getEntity().getConfig(CloudFoundryWebApp.REQUIRED_MEMORY),
+                    getLocation().getConfig(CloudFoundryPaasLocation.REQUIRED_MEMORY),
                     uris, null);
             getClient().uploadApplication(getApplicationName(), war.getCanonicalPath());
         } catch (IOException e) {

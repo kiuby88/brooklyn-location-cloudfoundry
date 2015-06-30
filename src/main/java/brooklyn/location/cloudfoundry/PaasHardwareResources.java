@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.entity.cloudfoundry.webapp;
+package brooklyn.location.cloudfoundry;
 
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
@@ -37,7 +37,6 @@ public interface PaasHardwareResources {
     @SetFromFlag("profile.instances")
     ConfigKey<Integer> REQUIRED_DISK = ConfigKeys.newIntegerConfigKey(
             "profile.disk", "Required disk to deploy the application (MB)", 1024);
-
 
     public static final AttributeSensor<Integer> INSTANCES_NUM =
             Sensors.newIntegerSensor("app.running.instances",

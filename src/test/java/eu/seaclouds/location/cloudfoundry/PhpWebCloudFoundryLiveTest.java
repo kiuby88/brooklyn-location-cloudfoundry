@@ -21,10 +21,10 @@ package eu.seaclouds.location.cloudfoundry;
 import brooklyn.entity.basic.Attributes;
 import brooklyn.entity.basic.Entities;
 import brooklyn.entity.basic.Lifecycle;
-import brooklyn.entity.cloudfoundry.webapp.PaasHardwareResources;
 import brooklyn.entity.cloudfoundry.webapp.php.PhpCloudFoundryPaasWebApp;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
+import brooklyn.location.cloudfoundry.PaasHardwareResources;
 import brooklyn.test.Asserts;
 import brooklyn.util.exceptions.PropagatedRuntimeException;
 import com.google.common.collect.ImmutableList;
@@ -32,7 +32,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 
 public class PhpWebCloudFoundryLiveTest extends AbstractCloudFoundryPaasLocationLiveTest {

@@ -31,7 +31,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLocation {
+public class CloudFoundryPaasLocation extends AbstractLocation
+        implements PaasLocation, PaasHardwareResources {
 
     public static final Logger LOG = LoggerFactory.getLogger(CloudFoundryPaasLocation.class);
 
@@ -54,8 +55,11 @@ public class CloudFoundryPaasLocation extends AbstractLocation implements PaasLo
 
     public void setUpClient() {
         if (client == null) {
-            CloudCredentials credentials = new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
-            client = new CloudFoundryClient(credentials, getTargetURL(getConfig(CF_ENDPOINT)), getConfig(CF_ORG), getConfig(CF_SPACE), true);
+            CloudCredentials credentials =
+                    new CloudCredentials(getConfig(CF_USER), getConfig(CF_PASSWORD));
+            client = new CloudFoundryClient(credentials,
+                    getTargetURL(getConfig(CF_ENDPOINT)),
+                    getConfig(CF_ORG), getConfig(CF_SPACE), true);
             client.login();
         }
     }
