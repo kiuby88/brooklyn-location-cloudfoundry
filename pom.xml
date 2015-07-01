@@ -299,6 +299,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.openshift</groupId>
+            <artifactId>openshift-java-client</artifactId>
+            <version>2.7.0.Final</version>
+        </dependency>
+
+        <dependency>
             <!-- this gives us flexible and easy-to-use logging; just edit logback-custom.xml! -->
             <groupId>org.apache.brooklyn</groupId>
             <artifactId>brooklyn-logback-xml</artifactId>
