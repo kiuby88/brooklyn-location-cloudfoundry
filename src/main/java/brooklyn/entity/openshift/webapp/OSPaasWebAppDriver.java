@@ -28,4 +28,10 @@ public interface OSPaasWebAppDriver extends OSPaasEntityDriver {
      */
     void deleteApplication();
 
+    /**
+     * Allows to add a custom environment variable to an application
+     * @param key
+     * @param value
+     */
+    void setEnv(String key, String value);
 }

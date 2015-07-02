@@ -31,10 +31,13 @@ import com.openshift.client.IUser;
 import com.openshift.client.cartridge.IStandaloneCartridge;
 import com.openshift.client.cartridge.StandaloneCartridge;
 import com.openshift.client.cartridge.query.LatestVersionOf;
+import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
         implements OSPaasWebAppDriver {
@@ -68,7 +71,6 @@ public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
         gitRepositoryUrl = getEntity().getConfig(OpenShiftWebApp.GIT_REPOSITORY_URL);
         //TODO check if the domain is valid
         domainName=getEntity().getConfig(OpenShiftWebApp.DOMAIN);
-
     }
 
     @Override
@@ -102,19 +104,47 @@ public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
     }
 
     public void preDeploy() {
-
-        /*
-        Initialize the user and the domain. These initializations could be added to the
-        init method (driver) but it could apply any changes on the cloud profile (e.g. domain
-        creation).
-         */
-        user=getClient().getUser();
-
-        domain=user.getDomain(domainName);
-        if(domain==null){
-            domain= user.createDomain(domainName);
-        }
+        initOpenShiftUser();
+        domain=createDomainIfNotExist(domainName);
     }
+
+    /**
+     * This method initialize the OpenShift user
+     */
+    private void initOpenShiftUser(){
+        user=getClient().getUser();
+    }
+
+    /**
+     * This method checks if the domain exists for the user. If the domain was not found,
+     * it will be created using the domainId.
+     * @param domainId The domainId which will be used for finding o creating the domain the
+     *                 user.
+     * @return a the found or created domain.
+     */
+    private IDomain createDomainIfNotExist(String domainId){
+        IDomain foundDomain=findDomainByID(domainId);
+        if(foundDomain==null){
+            foundDomain=user.createDomain(domainName);
+        }
+        return foundDomain;
+    }
+
+    private IDomain findDomainByID(String domainsId){
+        IDomain result=null;
+        if(user!=null){
+            List<IDomain> domains = user.getDomains();
+            for(IDomain domain:domains){
+                if(domain.getId().equals(domainsId)){
+                    result=domain;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+
 
     public void deploy(){
         //TODO could be refactor to a CONFIGKEY
@@ -126,7 +156,7 @@ public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
 
         deployedApp = new ApplicationBuilder(domain)
                 .setName(applicationName)
-                .setStandaloneCartridge(car1)
+                .setStandaloneCartridge(cartridge)
                 .setApplicationScale(scale1)
                 .setInitialGitUrl(gitRepositoryUrl)
                 .build();
@@ -134,7 +164,7 @@ public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
 
     public void preLaunch() {
         //TODO envs
-
+        configureEnv();
     }
 
     public void launch() {
@@ -163,5 +193,20 @@ public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
     public void deleteApplication() {
         deployedApp.destroy();
     }
+
+    @Override
+    public void setEnv(String key, String value) {
+        deployedApp.addEnvironmentVariable(key, value);
+    }
+
+    /**
+     * Add the env tot he application
+     */
+    protected void configureEnv() {
+        //TODO a sensor with the custom-environment variables?
+        Map<String, String> envs=getEntity().getConfig(CloudFoundryWebApp.ENV);
+        deployedApp.addEnvironmentVariables(envs);
+    }
+
 
 }

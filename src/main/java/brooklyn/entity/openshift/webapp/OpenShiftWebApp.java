@@ -21,12 +21,15 @@ package brooklyn.entity.openshift.webapp;
 import brooklyn.config.ConfigKey;
 import brooklyn.entity.basic.ConfigKeys;
 import brooklyn.entity.openshift.OpenShiftEntity;
+import brooklyn.entity.proxying.ImplementedBy;
 import brooklyn.event.AttributeSensor;
+import brooklyn.event.basic.MapConfigKey;
 import brooklyn.event.basic.Sensors;
 import brooklyn.util.flags.SetFromFlag;
 import brooklyn.util.text.Identifiers;
+import com.google.common.collect.ImmutableMap;
 
-
+@ImplementedBy(OpenShiftWebAppImpl.class)
 public interface OpenShiftWebApp extends OpenShiftEntity {
 
     @SetFromFlag("application-name")
@@ -43,7 +46,13 @@ public interface OpenShiftWebApp extends OpenShiftEntity {
     @SetFromFlag("application-domain")
     ConfigKey<String> DOMAIN = ConfigKeys.newStringConfigKey(
             "openshiftWebApp.application.domain",
-            "Application domain used by the user", "defaultDomain");
+            "Application domain used by the user", "brooklyndomain");
+
+    @SetFromFlag("env")
+    public static final MapConfigKey<String> ENV =
+            new MapConfigKey<String>(String.class, "openshift.webapp.env",
+                    "List of user-defined environment variables",
+                    ImmutableMap.<String, String>of());
 
     AttributeSensor<String> ROOT_URL =
             Sensors.newStringSensor("webapp.url", "URL of the application");

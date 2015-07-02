@@ -20,11 +20,14 @@ package eu.seaclouds.location.openshift;
 
 
 import brooklyn.entity.basic.Attributes;
+import brooklyn.entity.basic.Entities;
 import brooklyn.entity.cloudfoundry.webapp.java.JavaCloudFoundryPaasWebApp;
+import brooklyn.entity.openshift.webapp.OpenShiftWebApp;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.entity.trait.Startable;
 import brooklyn.test.Asserts;
 import com.google.common.collect.ImmutableList;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;
@@ -35,10 +38,17 @@ public class JavaWebOpenShiftLiveTest extends AbstractOpenShiftPaasLocationLiveT
     private final String GIT_REPOSITORY_URL = "https://github.com/kiuby88/kitchensink-example.git";
 
 
+    @AfterMethod(alwaysRun = true)
+    public void tearDown() throws Exception {
+        if (app != null) {
+            //Entities.destroyAllCatching(app.getManagementContext());
+        }
+    }
+
     @Test(groups = {"Live"})
     protected void deployApplicationTest() throws Exception {
-        final JavaCloudFoundryPaasWebApp server = app.
-                createAndManageChild(EntitySpec.create(JavaCloudFoundryPaasWebApp.class)
+        final OpenShiftWebApp server = app.
+                createAndManageChild(EntitySpec.create(OpenShiftWebApp.class)
                         .configure("application-name", APPLICATION_NAME)
                         .configure("git-url-repo", GIT_REPOSITORY_URL)
                         .location(openShiftPaasLocation));

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public abstract class OpenShiftWebAppImpl extends OpenShiftEntityImpl
+public class OpenShiftWebAppImpl extends OpenShiftEntityImpl
         implements OpenShiftWebApp{
 
     private static final Logger log = LoggerFactory.getLogger(OpenShiftWebAppImpl.class);
@@ -49,7 +49,10 @@ public abstract class OpenShiftWebAppImpl extends OpenShiftEntityImpl
     }
 
     @Override
-    public abstract Class getDriverInterface();
+    public Class getDriverInterface(){
+        //This method shoud be abstract
+        return OSPaasWebAppDriver.class;
+    }
 
     @Override
     public String getCartridge(){
