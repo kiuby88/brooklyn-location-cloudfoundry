@@ -35,7 +35,7 @@ import static org.testng.Assert.assertTrue;
 
 public class JavaWebOpenShiftLiveTest extends AbstractOpenShiftPaasLocationLiveTest {
 
-    private final String GIT_REPOSITORY_URL = "https://github.com/kiuby88/kitchensink-example.git";
+    private final String GIT_REPOSITORY_URL = "https://github.com/kiuby88/Chat-Application-Pivotal-Example.git";
 
 
     @AfterMethod(alwaysRun = true)

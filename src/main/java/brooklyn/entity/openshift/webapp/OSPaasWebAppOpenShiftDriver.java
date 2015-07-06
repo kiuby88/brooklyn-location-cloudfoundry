@@ -204,8 +204,11 @@ public class OSPaasWebAppOpenShiftDriver extends OSPaasEntityOpenShiftDriver
      */
     protected void configureEnv() {
         //TODO a sensor with the custom-environment variables?
-        Map<String, String> envs=getEntity().getConfig(CloudFoundryWebApp.ENV);
-        deployedApp.addEnvironmentVariables(envs);
+        Map<String, String> envs=getEntity().getConfig(OpenShiftWebApp.ENV);
+        if((envs!=null)&&(envs.size()!=0)){
+            deployedApp.addEnvironmentVariables(envs);
+            deployedApp.restart();
+        }
     }
 
 
