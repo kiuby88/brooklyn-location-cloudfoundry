@@ -38,15 +38,5 @@ public interface PaasHardwareResources {
     ConfigKey<Integer> REQUIRED_DISK = ConfigKeys.newIntegerConfigKey(
             "profile.disk", "Required disk to deploy the application (MB)", 1024);
 
-    public static final AttributeSensor<Integer> INSTANCES_NUM =
-            Sensors.newIntegerSensor("app.running.instances",
-                    "Instances which are used to run the application");
-
-    public static final AttributeSensor<Integer> MEMORY =
-            Sensors.newIntegerSensor("app.running.ram", "Current RAM assigned to the application MB");
-
-    public static final AttributeSensor<Integer> DISK =
-            Sensors.newIntegerSensor("app.running.disk", "Assigned disk to the application (MB)");
-
 
 }
