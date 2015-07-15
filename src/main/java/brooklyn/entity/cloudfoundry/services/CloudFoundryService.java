@@ -62,7 +62,7 @@ public interface CloudFoundryService extends CloudFoundryEntity {
     public void operation(CloudFoundryWebAppImpl app);
 
     /**
-     * Adds a set of sensors that provides the credentials for the argument application.
+     * Injects a set of sensors inside {@link CloudFoundryWebAppImpl} that provides the credentials.
      * @param webapp the application that contains the credentials for this service.
      */
     public void setBindingCredentialsFromApp(CloudFoundryWebAppImpl webapp);

@@ -18,7 +18,7 @@
  */
 package eu.seaclouds.location.cloudfoundry;
 
-import brooklyn.entity.cloudfoundry.generic.GenericService;
+import brooklyn.entity.cloudfoundry.services.generic.GenericService;
 import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
 import brooklyn.entity.proxying.EntitySpec;
 import brooklyn.test.Asserts;

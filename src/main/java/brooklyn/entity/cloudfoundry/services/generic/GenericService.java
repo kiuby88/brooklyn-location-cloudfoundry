@@ -16,10 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.entity.cloudfoundry.generic;
+package brooklyn.entity.cloudfoundry.services.generic;
 
-import brooklyn.entity.cloudfoundry.services.PaasServiceDriver;
+import brooklyn.config.ConfigKey;
+import brooklyn.entity.basic.ConfigKeys;
+import brooklyn.entity.cloudfoundry.services.CloudFoundryService;
+import brooklyn.entity.proxying.ImplementedBy;
+import brooklyn.util.flags.SetFromFlag;
 
+/**
+ * This Interface represent a generic and empty service.
+ * It could be bound to any application but the operation it will be empty.
+ * The ServiceType is not predefined and it should be defined for the service creation.
+ */
 
-public interface GenericServiceDriver extends PaasServiceDriver {
+@ImplementedBy(GenericServiceImpl.class)
+public interface GenericService extends CloudFoundryService {
+
+    @SetFromFlag("serviceType")
+    public static final ConfigKey<String> SERVICE_TYPE = ConfigKeys
+            .newStringConfigKey("service.type", "Type Of Service");
+
 }

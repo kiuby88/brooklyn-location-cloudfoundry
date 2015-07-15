@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package brooklyn.entity.cloudfoundry.generic;
+package brooklyn.entity.cloudfoundry.services.generic;
 
 
 import brooklyn.entity.cloudfoundry.services.CloudFoundryServiceImpl;

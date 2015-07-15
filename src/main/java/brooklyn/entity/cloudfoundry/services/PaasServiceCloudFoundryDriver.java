@@ -18,6 +18,8 @@
  */
 package brooklyn.entity.cloudfoundry.services;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import brooklyn.entity.cloudfoundry.PaasEntityCloudFoundryDriver;
 import brooklyn.location.cloudfoundry.CloudFoundryPaasLocation;
 import org.cloudfoundry.client.lib.domain.CloudEntity;
@@ -25,17 +27,15 @@ import org.cloudfoundry.client.lib.domain.CloudService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public abstract class PaasServiceCloudFoundryDriver extends PaasEntityCloudFoundryDriver
         implements PaasServiceDriver {
     
     public static final Logger log = LoggerFactory.getLogger(PaasServiceCloudFoundryDriver.class);
 
-    CloudService serviceInstance;
-    private String serviceInstanceName;
-    private String servicePlan;
-    private String serviceTypeId;
+    protected CloudService serviceInstance;
+    protected String serviceInstanceName;
+    protected String servicePlan;
+    protected String serviceTypeId;
 
     public PaasServiceCloudFoundryDriver(CloudFoundryServiceImpl entity,
                                          CloudFoundryPaasLocation location) {
