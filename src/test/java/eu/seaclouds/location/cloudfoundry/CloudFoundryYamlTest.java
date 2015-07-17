@@ -43,12 +43,13 @@ public class CloudFoundryYamlTest {
     private final String SERVICE_TYPE_ID = "cleardb";
     private final String SERVICE_PLAN = "spark";
 
-    private final String JDBC_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.jdbcUrl";
-    private final String NAME_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.name";
-    private final String HOSTNAME_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.hostname";
-    private final String USERNAME_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.username";
-    private final String PASSWORD_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.password";
-    private final String PORT_SENSOR = "test-brooklyn-service-mysql-from-yaml.credentials.port";
+    private final String SERVER_NAME = "test-brooklyn-app-from-yaml";
+    private final String JDBC_SENSOR = SERVER_NAME+".credentials.jdbcUrl";
+    private final String NAME_SENSOR = SERVER_NAME+".credentials.name";
+    private final String HOSTNAME_SENSOR = SERVER_NAME+".credentials.hostname";
+    private final String USERNAME_SENSOR = SERVER_NAME+".credentials.username";
+    private final String PASSWORD_SENSOR = SERVER_NAME+".credentials.password";
+    private final String PORT_SENSOR = SERVER_NAME+".credentials.port";
 
 
     @Test( groups={"Live"} )

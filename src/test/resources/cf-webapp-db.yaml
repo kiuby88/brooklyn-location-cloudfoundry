@@ -5,17 +5,17 @@ services:
   id: webapp
   location: cloudfoundry-instance
   brooklyn.config:
-    application-name: test-brooklyn-service-mysql-from-yaml
+    application-name: test-brooklyn-app-from-yaml
     application-url: classpath://brooklyn-webapp-custom-env.war
     bind: 
     - $brooklyn:component("db")
     env: 
-      myDbJdbcUrl: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.jdbcUrl")
-      myDbName: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.name")
-      myDbHostName: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.hostname")
-      myDbUser: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.username")
-      myDbPassword: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.password")
-      myDbPort: $brooklyn:component("db").attributeWhenReady("test-brooklyn-service-mysql-from-yaml.credentials.port")
+      myDbJdbcUrl: $brooklyn:component("db").attributeWhenReady("test-brooklyn-app-from-yaml.credentials.jdbcUrl")
+      myDbName: $brooklyn:component("db").attributeWhenReady("test-brooklyn-app-from-yaml.credentials.name")
+      myDbHostName: $brooklyn:component("db").attributeWhenReady("test-brooklyn-app-from-yaml.credentials.hostname")
+      myDbUser: $brooklyn:component("db").attributeWhenReady("test-brooklyn-app-from-yaml.credentials.username")
+      myDbPassword: $brooklyn:component("db").attributeWhenReady("test-brooklyn-app-from-yaml.credentials.password")
+      myDbPort: $brooklyn:component("db").attributeWhenReady("test-brooklyn-app-from-yaml.credentials.port")
 
 - type: brooklyn.entity.cloudfoundry.services.sql.cleardb.ClearDbService
   id: db
